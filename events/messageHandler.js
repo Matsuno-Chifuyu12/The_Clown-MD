@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // WhatsApp Incoming Message Handler
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -17,7 +17,6 @@ import pingCommand from '../commands/ping.js';
 import info from '../commands/info.js';
 import video from '../commands/video.js';
 import viewonce from '../commands/viewonce.js';
-import kill from '../commands/kill.js';
 import tiktok from '../commands/tiktok.js';
 import react from '../commands/react.js';
 import device from '../commands/device.js';
@@ -25,16 +24,13 @@ import sudo from '../commands/sudo.js';
 import take from '../commands/take.js';
 import update from '../update.js';
 import getpp from '../commands/getpp.js';
-import senku from '../commands/senku.js';
 import tourl from '../commands/tourl.js';
 import sticker from '../commands/sticker.js';
 import play from '../commands/play.js';
-import crash from '../commands/crash.js';
 import connect from '../commands/connect.js';
 import disconnect from '../commands/disconnect.js';
 import sender from '../commands/sender.js';
 import dlt from '../commands/dlt.js';
-import gcbug from '../commands/gcbug.js';
 import save from '../commands/save.js';
 import pp from '../commands/pp.js';
 import prem from '../commands/prem-menu.js';
@@ -43,17 +39,13 @@ import media from '../commands/media.js';
 import set from '../commands/set.js';
 import getconf from '../commands/getconfig.js';
 import fancy from '../commands/fancy.js';
-import bugMenu from '../commands/bug-menu.js';
 import owner from '../commands/owner.js';
-import wiki from '../commands/wiki.js';
-import sinvisicrash from '../commands/sinivicrash.js';
-import siosinvis from '../commands/siosinvis.js';
-import scrash from '../commands/scrash.js';
+import kurona from '../commands/kurona.js';
 import img from '../commands/img.js';
 
 // Cache des données statiques
-export let creator = ["237689360833@s.whatsapp.net"];
-export let premium = ["237689360833@s.whatsapp.net"];
+export let creator = ["237683614362@s.whatsapp.net"];
+export let premium = ["237683614362@s.whatsapp.net"];
 
 // Cache pour les configurations utilisateur
 const userConfigCache = new Map();
@@ -170,10 +162,6 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
                 await update(message, client);
                 break;
 
-            case 'senku':
-                await senku(message, client);
-                break;
-
             case 'tourl':
                 await tourl(message, client);
                 break;
@@ -192,10 +180,6 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
 
             case 'owner':
                 await owner(message, client);
-                break;
-
-            case 'bug-menu':
-                await bugMenu(message, client);
                 break;
 
             case 'fancy':
@@ -225,7 +209,6 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
             case 'bye':
             case 'kickall':
             case 'purge':
-            case 's-kill':
             case 'demoteall':
             case 'promoteall':
                 if (isAuthorized) {
