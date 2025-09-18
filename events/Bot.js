@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Telegram Bot Starter (Optimized)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -47,7 +47,7 @@ export async function startBot() {
         reconnect();
         messageHandler(bot);
 
-        console.log('🚀 🤖 Telegram bot opérationnel | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴');
+        console.log('🚀 🤖 Telegram bot opérationnel | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴');
 
         // 🛑 Nettoyage à la fermeture
         process.on('SIGINT', () => {
