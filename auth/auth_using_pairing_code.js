@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // WhatsApp Bot Connection Module (Pairing Code Optimisé)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -72,7 +72,7 @@ async function connectToWhatsApp(handleMessage) {
                     connectionInstance = null;
                 }
             } else if (connection === "open") {
-                console.log("✅ WhatsApp connecté avec succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
+                console.log("✅ WhatsApp connecté avec succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
             }
         });
 
