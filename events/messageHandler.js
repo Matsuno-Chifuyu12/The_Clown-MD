@@ -138,7 +138,7 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
                 if (premium.includes(number + "@s.whatsapp.net")) {
                     await connect.connect(message, client, args[0]);
                 } else {
-                    await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+                    await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 }
                 break;
 
@@ -150,7 +150,7 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
                 if (premium.includes(number + "@s.whatsapp.net")) {
                     await disconnect(message, client);
                 } else {
-                    await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+                    await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 }
                 break;
 
@@ -214,7 +214,7 @@ async function handlePrefixedCommand(message, client, number, prefix, approvedUs
                 if (isAuthorized) {
                     await handleAdminCommand(command, message, client, userConfig.lid);
                 } else {
-                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 }
                 break;
 
@@ -259,16 +259,16 @@ async function handleAdminCommand(command, message, client, lid) {
                 break;
             case 'demoteall':
                 await group.dall(message, client, lid);
-                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 1);
+                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
                 break;
             case 'promoteall':
                 await group.pall(message, client, lid);
-                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 1);
+                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
                 break;
         }
     } catch (error) {
         await client.sendMessage(message.key.remoteJid, {
-            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`
+            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`
         });
         console.error(`Erreur commande ${command}:`, error);
     }
@@ -277,7 +277,7 @@ async function handleAdminCommand(command, message, client, lid) {
 // Gestion des commandes groupe
 async function handleGroupCommand(command, message, client, isAuthorized) {
     if (!isAuthorized) {
-        await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+        await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
         return;
     }
 
@@ -288,16 +288,16 @@ async function handleGroupCommand(command, message, client, isAuthorized) {
                 break;
             case 'promote':
                 await group.promote(message, client);
-                await channelSender(message, client, "✅ Promotion réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+                await channelSender(message, client, "✅ Promotion réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 break;
             case 'demote':
                 await group.demote(message, client);
-                await channelSender(message, client, "✅ Rétrogradation réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴", 2);
+                await channelSender(message, client, "✅ Rétrogradation réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 break;
         }
     } catch (error) {
         await client.sendMessage(message.key.remoteJid, {
-            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`
+            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`
         });
         console.error(`Erreur commande ${command}:`, error);
     }
