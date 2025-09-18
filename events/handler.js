@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Telegram Bot Message Handler (Premium + Utils)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -99,7 +99,7 @@ export function messageHandler(bot) {
 
     if (!isMember) return await start(bot, msg);
     if (!isPrem) {
-      return bot.sendMessage(msg.chat.id, "❌ Accès réservé aux utilisateurs premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
+      return bot.sendMessage(msg.chat.id, "❌ Accès réservé aux utilisateurs premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
     }
     return callback();
   };
@@ -140,7 +140,7 @@ export function messageHandler(bot) {
   // ─── Commandes admin ───
   bot.onText(/\/addprem(?:\s+(.+))?/, async (msg, match) => {
     if (msg.from.id.toString() !== OWNER_ID) {
-      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
+      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
     }
     const targetId = match?.[1]?.trim();
     if (!targetId) return bot.sendMessage(msg.chat.id, "❌ Usage: /addprem <user_id>");
@@ -150,7 +150,7 @@ export function messageHandler(bot) {
 
   bot.onText(/\/delprem(?:\s+(.+))?/, async (msg, match) => {
     if (msg.from.id.toString() !== OWNER_ID) {
-      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
+      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
     }
     const targetId = match?.[1]?.trim();
     if (!targetId) return bot.sendMessage(msg.chat.id, "❌ Usage: /delprem <user_id>");
@@ -161,7 +161,7 @@ export function messageHandler(bot) {
   bot.onText(/\/keygen(?:\s+(.+))?/, async (msg, match) => {
     const creds = getCreds();
     if (msg.from.id.toString() !== creds.telegram_id) {
-      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
+      return bot.sendMessage(msg.chat.id, "❌ Accès refusé | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
     }
     if (!match?.[1]) {
       return bot.sendMessage(msg.chat.id, "❌ Usage: /keygen <duration_days> <user_id>");
@@ -175,7 +175,7 @@ export function messageHandler(bot) {
     const code = encode(id, dur);
     bot.sendMessage(
       msg.chat.id,
-      `🗝️ Code pour ${id}:\n\`\`\`${code}\`\`\`\n⏰ Durée: ${dur} jour(s) | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`,
+      `🗝️ Code pour ${id}:\n\`\`\`${code}\`\`\`\n⏰ Durée: ${dur} jour(s) | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`,
       { parse_mode: "Markdown" }
     );
   });
