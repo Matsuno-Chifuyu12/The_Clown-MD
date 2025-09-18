@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // WhatsApp Connection Update Handler
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -15,22 +15,22 @@ function handleConnectionUpdate(update, reconnect) {
         case 'close':
             // Vérifier si une reconnexion est nécessaire
             if (statusCode !== DisconnectReason.loggedOut) {
-                console.log(`🔌 Déconnexion détectée | Code: ${statusCode || 'inconnu'}`);
-                console.log('🔄 Reconnexion en cours...');
+                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🔌 Déconnexion détectée, Code: " + (statusCode || 'inconnu') + "\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
+                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🔄 Reconnexion en cours...\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
                 reconnect();
             } else {
-                console.log('❌ Déconnexion permanente | Session terminée, réauthentification requise.');
+                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ❌ Déconnexion permanente. Session terminée,\n│ réauthentification requise.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
             }
             break;
 
         case 'open':
-            console.log('✅ Connexion établie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴');
+            console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴 ✅ Connexion établie\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
             break;
 
         default:
             // Gestion du pairing code si disponible
             if (pairingCode) {
-                console.log(`📲 Pairing Code généré : ${pairingCode}`);
+                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 📲 Pairing Code généré : " + pairingCode + "\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
             }
             break;
     }
