@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Matsuno-Chifuyu12/kurona_amargeedon.git"
+    "url": "git+https://github.com/Matsuno-Chifuyu12/the_clown-md.git"
   },
    "keywords": [
     "whatsapp",
@@ -26,9 +26,9 @@
   "author": "🎴 𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Matsuno-Chifuyu12/kurona-md/issues"
+    "url": "https://github.com/Matsuno-Chifuyu12/the_clown-md/issues"
   },
-  "homepage": "https://github.com/Matsuno-Chifuyu12/kurona-md#readme",
+  "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
     "axios-retry": "^4.5.0",
     "bailey": "https://github.com/Matsuno-Chifuyu12/kurona_baileys",
