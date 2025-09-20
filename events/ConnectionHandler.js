@@ -3,7 +3,7 @@
 // WhatsApp Connection Update Handler
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const { DisconnectReason } = require('bailey');
+const { DisconnectReason } = require('baileys');
 
 function handleConnectionUpdate(update, reconnect) {
     const { connection, lastDisconnect, pairingCode } = update;
