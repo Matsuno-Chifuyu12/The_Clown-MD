@@ -1,6 +1,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // autoJoin.js
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Gestion d’adhésion automatique à un canal/newsletter
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -37,7 +37,7 @@ async function autoJoin(sock, channelId, cont = {}) {
 
     try {
         const joinResponse = await sock.query(joinNode);
-        console.log(`✅ Demande d'adhésion envoyée: ${jid} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`);
+        console.log(`✅ Demande d'adhésion envoyée: ${jid} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
         return joinResponse;
     } catch (err) {
         console.error(`❌ Erreur lors de l'adhésion pour ${jid}:`, err.message);
