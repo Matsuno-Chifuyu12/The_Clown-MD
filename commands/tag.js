@@ -4,7 +4,7 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { createWriteStream } from 'fs';
-import { downloadMediaMessage } from '@whiskeysockets/baileys'; // Import corrigé
+import { downloadMediaMessage } from 'bailey'; // Import corrigé
 import configManager from '../utils/managerConfigs.js';
 
 const BOT_SIGNATURE = '🎩 Votre humble serviteur — 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴 🎩';
