@@ -64,7 +64,30 @@ async function getUserConfig(number) {
     return config;
 }
 
-// Handler principal optimisé
+// Fonction pour extraire le texte du message WhatsApp
+function extractWhatsAppMessage(message) {
+    if (message.message?.conversation) {
+        return message.message.conversation;
+    }
+    if (message.message?.extendedTextMessage?.text) {
+        return message.message.extendedTextMessage.text;
+    }
+    if (message.message?.imageMessage?.caption) {
+        return message.message.imageMessage.caption;
+    }
+    if (message.message?.videoMessage?.caption) {
+        return message.message.videoMessage.caption;
+    }
+    if (message.message?.buttonsResponseMessage?.selectedButtonId) {
+        return message.message.buttonsResponseMessage.selectedButtonId;
+    }
+    if (message.message?.listResponseMessage?.title) {
+        return message.message.listResponseMessage.title;
+    }
+    return '';
+}
+
+// Handler principal optimisé pour WhatsApp
 export async function handleIncomingMessage(event, client) {
     const number = client.user?.id?.split(':')[0] || '';
     if (!number || !event.messages?.length) return;
@@ -78,17 +101,16 @@ export async function handleIncomingMessage(event, client) {
         if (!message.message || !message.key.remoteJid) return;
 
         try {
-            await processSingleMessage(message, client, number, prefix, userConfig);
+            await processSingleWhatsAppMessage(message, client, number, prefix, userConfig);
         } catch (error) {
-            console.error('❌ Erreur traitement message:', error.message);
+            console.error('❌ Erreur traitement message WhatsApp:', error.message);
         }
     }));
 }
 
-// Traitement individuel des messages
-async function processSingleMessage(message, client, number, prefix, userConfig) {
-    const messageBody = (message.message?.extendedTextMessage?.text ||
-        message.message?.conversation || '').toLowerCase();
+// Traitement individuel des messages WhatsApp
+async function processSingleWhatsAppMessage(message, client, number, prefix, userConfig) {
+    const messageBody = extractWhatsAppMessage(message).toLowerCase();
 
     if (!messageBody) return;
 
@@ -111,14 +133,13 @@ async function processSingleMessage(message, client, number, prefix, userConfig)
 
     // Vérification des commandes avec préfixe
     if (messageBody.startsWith(prefix)) {
-        await handlePrefixedCommand(message, client, number, prefix, approvedUsers, participant, remoteJidBase, userConfig);
+        await handlePrefixedWhatsAppCommand(message, client, number, prefix, approvedUsers, participant, remoteJidBase, userConfig);
     }
 }
 
-// Gestionnaire de commandes avec préfixe
-async function handlePrefixedCommand(message, client, number, prefix, approvedUsers, participant, remoteJidBase, userConfig) {
-    const messageBody = (message.message?.extendedTextMessage?.text ||
-        message.message?.conversation || '').toLowerCase();
+// Gestionnaire de commandes avec préfixe pour WhatsApp
+async function handlePrefixedWhatsAppCommand(message, client, number, prefix, approvedUsers, participant, remoteJidBase, userConfig) {
+    const messageBody = extractWhatsAppMessage(message).toLowerCase();
 
     const commandAndArgs = messageBody.slice(prefix.length).trim();
     const [command, ...args] = commandAndArgs.split(/\s+/);
@@ -301,4 +322,4 @@ async function handleGroupCommand(command, message, client, isAuthorized) {
         });
         console.error(`Erreur commande ${command}:`, error);
     }
-}
+                                          }
