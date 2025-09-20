@@ -1,12 +1,12 @@
 // reconnect.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des sessions WhatsApp (start, reconnect, remove)
 // Hyper performant • Fluide • Robuste • Design Propre
 
-import pkg from 'bailey';
+import pkg from 'baileys';
 const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
-import handleIncomingMessage from '../events/messageHandler.js';
-import configManager from '../utils/manageConfigs.js';
+import handleIncomingMessage from '../messages/messageHandler.js';
+import configManager from '../utils/managerConfigs.js';
 import fs from 'fs';
 
 const SESSIONS_FILE = './sessions.json';
@@ -24,7 +24,7 @@ function getConfig() {
  * Supprime proprement une session
  */
 function removeSession(number) {
-    console.log(`❌ Suppression de la session: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+    console.log(`❌ Suppression de la session: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
 
     try {
         // Fichier sessions
@@ -42,7 +42,7 @@ function removeSession(number) {
         // Mémoire
         sessions.delete(number);
 
-        console.log(`✅ Session supprimée: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+        console.log(`✅ Session supprimée: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
     } catch (err) {
         console.error(`💥 Erreur suppression session ${number}:`, err.message);
     }
@@ -69,7 +69,7 @@ async function startSession(targetNumber) {
         // Événement connexion
         sock.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
             if (connection === 'close') {
-                console.log(`🔌 Session fermée: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+                console.log(`🔌 Session fermée: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
                 const statusCode = lastDisconnect?.error?.output?.statusCode;
                 const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
@@ -81,7 +81,7 @@ async function startSession(targetNumber) {
                     removeSession(targetNumber);
                 }
             } else if (connection === 'open') {
-                console.log(`✅ Session ouverte: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+                console.log(`✅ Session ouverte: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
             }
         });
 
@@ -96,7 +96,7 @@ async function startSession(targetNumber) {
 
         // Stockage session
         sessions.set(targetNumber, sock);
-        console.log(`✅ Session initialisée: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+        console.log(`✅ Session initialisée: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
 
         return sock;
 
@@ -110,7 +110,7 @@ async function startSession(targetNumber) {
  * Reconnexion automatique de toutes les sessions actives
  */
 async function reconnect() {
-    console.log("🔄 Reconnexion de toutes les sessions | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴");
+    console.log("🔄 Reconnexion de toutes les sessions | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴");
 
     if (!fs.existsSync(SESSIONS_FILE)) return;
 
@@ -125,7 +125,7 @@ async function reconnect() {
     const reconnectPromises = sessionNumbers
         .filter(number => number !== primaryNumber)
         .map(async (number) => {
-            console.log(`🔄 Tentative reconnexion: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+            console.log(`🔄 Tentative reconnexion: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
             try { await startSession(number); }
             catch (err) { console.error(`💥 Échec reconnexion ${number}:`, err.message); removeSession(number); }
         });
