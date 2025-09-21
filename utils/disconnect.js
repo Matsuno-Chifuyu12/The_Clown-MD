@@ -1,5 +1,5 @@
 // disconnect.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion de la déconnexion des sessions WhatsApp
 // Kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -35,7 +35,7 @@ function removeSession(number, bot, msg) {
         // Nettoyage mémoire
         delete sessions[number];
 
-        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Session supprimée: ${number}`);
+        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Session supprimée: ${number}`);
 
         return bot.sendMessage(
             chatId,
@@ -44,11 +44,11 @@ function removeSession(number, bot, msg) {
         );
 
     } catch (err) {
-        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur suppression session ${number}:`, err.message);
+        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur suppression session ${number}:`, err.message);
 
         return bot.sendMessage(
             chatId,
-            `❌ Erreur lors de la suppression de la session *${number}*\n${err.message} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`,
+            `❌ Erreur lors de la suppression de la session *${number}*\n${err.message} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`,
             { parse_mode: "Markdown" }
         );
     }
@@ -61,7 +61,7 @@ export async function disconnect(bot, msg, match) {
     if (!text) {
         return bot.sendMessage(
             chatId,
-            "❌ Veuillez fournir un numéro.\nUsage : `/disconnect <numéro>` | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴",
+            "❌ Veuillez fournir un numéro.\nUsage : `/disconnect <numéro>` | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴",
             { parse_mode: "Markdown" }
         );
     }
@@ -71,12 +71,12 @@ export async function disconnect(bot, msg, match) {
     if (!targetNumber || targetNumber.length < 8) {
         return bot.sendMessage(
             chatId,
-            "❌ Numéro invalide | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴",
+            "❌ Numéro invalide | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴",
             { parse_mode: "Markdown" }
         );
     }
 
-    console.log(`🔌 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Déconnexion demandée pour: ${targetNumber}`);
+    console.log(`🔌 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Déconnexion demandée pour: ${targetNumber}`);
 
     return removeSession(targetNumber, bot, msg);
 }
