@@ -1,5 +1,5 @@
 // isValidCode.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Vérification et validation sécurisée des codes premium
 // Développé par kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -16,20 +16,20 @@ export default function isValidCode(code) {
         const [id, expiry] = decoded.split("|");
 
         if (OWNER_ID !== id) {
-            console.log(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] ID invalide détecté: ${id}`);
+            console.log(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] ID invalide détecté: ${id}`);
             return false;
         }
 
         if (Date.now() > Number(expiry)) {
-            console.log(`⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Code expiré pour l’ID: ${id}`);
+            console.log(`⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Code expiré pour l’ID: ${id}`);
             return false;
         }
 
-        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Code valide pour l’ID: ${id}`);
+        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Code valide pour l’ID: ${id}`);
         return true;
 
     } catch (error) {
-        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur lors du décodage du code:`, error.message);
+        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur lors du décodage du code:`, error.message);
         return false;
     }
 }
