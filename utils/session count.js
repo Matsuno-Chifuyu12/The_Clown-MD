@@ -1,5 +1,5 @@
 // sessionCount.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Compteur de sessions actives
 // Développé par kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -13,7 +13,7 @@ import fs from 'fs';
 export default function sessionCount(sessionFile = './sessions.json') {
     try {
         if (!fs.existsSync(sessionFile)) {
-            console.log('⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Aucun fichier de sessions trouvé.');
+            console.log('⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Aucun fichier de sessions trouvé.');
             return 0;
         }
 
@@ -22,11 +22,11 @@ export default function sessionCount(sessionFile = './sessions.json') {
 
         const activeCount = Array.isArray(sessionObj.sessions) ? sessionObj.sessions.length : 0;
 
-        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Sessions actives détectées : ${activeCount}`);
+        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Sessions actives détectées : ${activeCount}`);
         return activeCount;
 
     } catch (error) {
-        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur lecture fichier sessions :`, error.message);
+        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur lecture fichier sessions :`, error.message);
         return 0;
     }
 }
