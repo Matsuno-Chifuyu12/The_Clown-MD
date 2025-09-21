@@ -1,6 +1,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // checkmember.js
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Vérifie si un utilisateur est membre du channel et du groupe Kurona
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -41,7 +41,7 @@ export async function isUserInChannel(bot, userId) {
         return result;
 
     } catch (error) {
-        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur vérification adhésion de ${userId}:`, error.message);
+        console.error(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur vérification adhésion de ${userId}:`, error.message);
         return false;
     }
 }
