@@ -205,7 +205,7 @@ async function connect(message, client) {
 
 export default { connect, reconnect };
 
-console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-console.log(`   ${BOT_NAME} prêt à fonctionner`);
-console.log(`   Créateur : ${CREATOR}`);
-console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+console.log(`\n╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮`);
+console.log(`|   ${BOT_NAME} prêt à fonctionner`);
+console.log(`|   Créateur : ${CREATOR}`);
+console.log(`╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯\n`);
