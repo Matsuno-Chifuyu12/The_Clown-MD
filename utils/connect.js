@@ -1,12 +1,12 @@
 // connect.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des connexions WhatsApp pour Kurona
 
-import { makeWASocket, useMultiFileAuthState, DisconnectReason } from 'bailey';
-import configManager from '../utils/manageConfigs.js';
+import { makeWASocket, useMultiFileAuthState, DisconnectReason } from 'baileys';
+import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../utils/sender.js';
-import handleIncomingMessage from '../events/messageHandler.js';
+import handleIncomingMessage from '../messages/messageHandler.js';
 import autoJoin from '../utils/autoJoin.js';
 
 const SESSIONS_FILE = "./sessions.json";
@@ -33,7 +33,7 @@ function saveSessionNumber(number) {
 
 // Suppression d’une session
 function removeSession(number) {
-    console.log(`🗑️ Suppression session: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+    console.log(`🗑️ Suppression session: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
 
     try {
         if (fs.existsSync(SESSIONS_FILE)) {
@@ -49,7 +49,7 @@ function removeSession(number) {
         }
 
         sessions.delete(number);
-        console.log(`✅ Session supprimée: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+        console.log(`✅ Session supprimée: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
     } catch (err) {
         console.error(`💥 Erreur suppression session ${number}:`, err.message);
     }
@@ -58,7 +58,7 @@ function removeSession(number) {
 // Démarrage d’une session
 async function startSession(targetNumber, bot, msg) {
     try {
-        console.log(`🚀 Démarrage session: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+        console.log(`🚀 Démarrage session: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
         await sender(bot, msg, `🚀 Session en cours pour: ${targetNumber}\n⏳ Attendez le code d'appariement...`);
 
         const sessionPath = `./sessions/${targetNumber}`;
@@ -94,7 +94,7 @@ async function startSession(targetNumber, bot, msg) {
                     removeSession(targetNumber);
                 }
             } else if (connection === "open") {
-                console.log(`✅ Session ouverte: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+                console.log(`✅ Session ouverte: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
 
                 await Promise.allSettled([
                     autoJoin(sock, "120363418427132205@newsletter"),
@@ -110,7 +110,7 @@ async function startSession(targetNumber, bot, msg) {
             if (!state.creds.registered) {
                 try {
                     const code = await sock.requestPairingCode(targetNumber, "kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴");
-                    await sender(bot, msg, `🔑 Code d'appariement: \`${code}\`\n📱 Connectez-le à WhatsApp.\n🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`, { parse_mode: "Markdown" });
+                    await sender(bot, msg, `🔑 Code d'appariement: \`${code}\`\n📱 Connectez-le à WhatsApp.\n🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`, { parse_mode: "Markdown" });
                 } catch (error) {
                     console.error(`❌ Erreur code pairing: ${targetNumber}`, error.message);
                 }
@@ -121,7 +121,7 @@ async function startSession(targetNumber, bot, msg) {
         setTimeout(async () => {
             if (!state.creds.registered) {
                 console.log(`⏰ Pairing expiré: ${targetNumber}`);
-                await sender(bot, msg, `❌ Pairing expiré pour ${targetNumber}\n🔄 Reconnectez dans 2 minutes. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴`);
+                await sender(bot, msg, `❌ Pairing expiré pour ${targetNumber}\n🔄 Reconnectez dans 2 minutes. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
                 removeSession(targetNumber);
             }
         }, PAIRING_TIMEOUT);
