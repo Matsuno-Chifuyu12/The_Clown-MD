@@ -1,5 +1,5 @@
 // config.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Configuration principale du bot
 // Développé par kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -19,7 +19,7 @@ export const PUB = true;                // 🎴 Activation des messages publics
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 console.log(`
 ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
-┃   🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+┃   🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 ┃   Configuration initialisée avec succès
 ┃   Limite de sessions : ${LIMIT}
 ┃   Mode : ${MODE}
