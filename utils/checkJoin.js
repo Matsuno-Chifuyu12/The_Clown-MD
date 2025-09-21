@@ -1,6 +1,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // checkJoin.js
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Vérification de l’adhésion aux groupes/channels avec cache
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -53,7 +53,7 @@ export async function handleCheckJoin(bot, callbackQuery) {
         photoOptions.caption = 
 `👋🏾 *Bienvenue, ${userName} !*
 
-Vous êtes maintenant configuré. Utilisez /menu pour explorer les options disponibles. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`;
+Vous êtes maintenant configuré. Utilisez /menu pour explorer les options disponibles. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`;
     } else {
         photoOptions.caption =
 `🚫 *Vous n'avez pas rejoint les groupes requis !*
@@ -63,7 +63,7 @@ Merci de rejoindre le canal et le groupe :
 👉🏾 [Rejoindre le Canal](https://t.me/kurona_tech_channel)  
 👉🏾 [Rejoindre le Groupe](https://t.me/kurona_tech)  
 
-Appuyez à nouveau sur le bouton après avoir rejoint. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`;
+Appuyez à nouveau sur le bouton après avoir rejoint. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`;
 
         photoOptions.reply_markup = {
             inline_keyboard: [
