@@ -1,5 +1,5 @@
 // redirect.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des redirections
 // Développé par kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -13,27 +13,27 @@ import { REDIRECT_BOT } from '../config.js';
 export async function redirect(bot, msg) {
     try {
         if (!bot || !msg?.chat?.id) {
-            console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Paramètres invalides pour la redirection.");
+            console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Paramètres invalides pour la redirection.");
             return;
         }
 
         if (!REDIRECT_BOT || REDIRECT_BOT === 'None') {
             await bot.sendMessage(
                 msg.chat.id,
-                `⚠️ *Service saturé* ⚠️\n\nTous nos bots 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴 sont actuellement occupés.\nMerci de réessayer plus tard ou rejoins notre groupe officiel pour obtenir l'accès premium (2$ / 1000 Fcfa).\n\n— signé kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴`,
+                `⚠️ *Service saturé* ⚠️\n\nTous nos bots 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 sont actuellement occupés.\nMerci de réessayer plus tard ou rejoins notre groupe officiel pour obtenir l'accès premium (2$ / 1000 Fcfa).\n\n— signé kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴`,
                 { parse_mode: "Markdown" }
             );
-            console.log("⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Aucun bot de redirection disponible.");
+            console.log("⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Aucun bot de redirection disponible.");
         } else {
             await bot.sendMessage(
                 msg.chat.id,
                 `🚀 Ce bot est actuellement *complet*.\nRedirection vers un autre bot disponible :\n👉 ${REDIRECT_BOT}\n\n— signé kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴`,
                 { parse_mode: "Markdown" }
             );
-            console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Redirection effectuée vers ${REDIRECT_BOT}`);
+            console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Redirection effectuée vers ${REDIRECT_BOT}`);
         }
     } catch (error) {
-        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur lors de la redirection :", error.message);
+        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur lors de la redirection :", error.message);
     }
 }
 
