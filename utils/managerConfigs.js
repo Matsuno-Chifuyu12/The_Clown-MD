@@ -1,5 +1,5 @@
-// manageConfigs.js
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// managerConfigs.js
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion centralisée et optimisée de la configuration
 // Kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
@@ -16,14 +16,14 @@ function loadConfig() {
     try {
         if (fs.existsSync(CONFIG_FILE)) {
             const data = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf-8"));
-            console.log("✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Configuration chargée avec succès.");
+            console.log("✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Configuration chargée avec succès.");
             return data;
         } else {
-            console.warn("⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] config.json introuvable. Utilisation d'une configuration par défaut.");
+            console.warn("⚠️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] config.json introuvable. Utilisation d'une configuration par défaut.");
             return { users: {} };
         }
     } catch (error) {
-        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Erreur lors du chargement de la configuration:", error.message);
+        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Erreur lors du chargement de la configuration:", error.message);
         return { users: {} };
     }
 }
@@ -32,9 +32,9 @@ function loadConfig() {
 function saveConfig() {
     try {
         fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-        console.log("💾 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Configuration sauvegardée avec succès.");
+        console.log("💾 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Configuration sauvegardée avec succès.");
     } catch (error) {
-        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴] Échec de la sauvegarde de la configuration:", error.message);
+        console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Échec de la sauvegarde de la configuration:", error.message);
     }
 }
 
