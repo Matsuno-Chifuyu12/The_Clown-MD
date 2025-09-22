@@ -1,5 +1,5 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
 // Commande : disconnect.js
 // Supprime une session active
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import sender from '../commands/Sender.js';
 
-const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴";
+const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴";
 
 async function disconnect(message, client) {
     const remoteJid = message.key?.remoteJid;

@@ -1,71 +1,80 @@
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
-// premium-manager
-// 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// Commande : Premium Manager
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export async function modifyprem(message, client, list, action) {
+import fs from "fs";
+
+const premiumFile = "./config/premium.json";
+
+// Charger la liste des premium
+function loadPremium() {
+    if (!fs.existsSync(premiumFile)) return [];
     try {
-        const remoteJid = message.key?.remoteJid;
-        if (!remoteJid) throw new Error("⚠️ JID invalide — impossible d’identifier la source.");
-
-        // Extraction commande + arguments
-        const messageBody =
-            message.message?.extendedTextMessage?.text ||
-            message.message?.conversation ||
-            "";
-        const commandAndArgs = messageBody.slice(1).trim();
-        const args = commandAndArgs.split(/\s+/).slice(1);
-
-        let participant;
-
-        // Cas 1 : reply
-        if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
-            participant =
-                message.message?.extendedTextMessage?.contextInfo?.participant ||
-                message.key.participant;
-        }
-        // Cas 2 : numéro en argument
-        else if (args.length > 0) {
-            const jidMatch = args[0].match(/\d+/);
-            if (!jidMatch) throw new Error("⚠️ Format du participant invalide.");
-            participant = `${jidMatch[0]}@s.whatsapp.net`;
-        }
-        // Cas 3 : aucun participant
-        else {
-            throw new Error("⚠️ Aucun participant spécifié.");
-        }
-
-        // Gestion Premium
-        if (action === "add") {
-            if (!list.includes(participant)) {
-                list.push(participant);
-                console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Ajout Premium ➝ ${participant}`);
-            } else {
-                console.log(`ℹ️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Déjà Premium ➝ ${participant}`);
-            }
-        } else if (action === "remove") {
-            const index = list.indexOf(participant);
-            if (index !== -1) {
-                list.splice(index, 1);
-                console.log(`❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Retrait Premium ➝ ${participant}`);
-            } else {
-                console.log(`ℹ️ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Non trouvé dans Premium ➝ ${participant}`);
-            }
-        }
-    } catch (error) {
-        console.error(`🔥 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 | ERREUR] ➝ ${error.message}`);
+        return JSON.parse(fs.readFileSync(premiumFile));
+    } catch (e) {
+        console.error("⚠️ Erreur lors du chargement de premium.json :", e);
+        return [];
     }
 }
 
-// Ajout Premium
-export async function addprem(message, client, list) {
-    await modifyprem(message, client, list, "add");
+// Sauvegarder la liste des premium
+function savePremium(list) {
+    fs.writeFileSync(premiumFile, JSON.stringify(list, null, 2));
 }
 
-// Suppression Premium
-export async function delprem(message, client, list) {
-    await modifyprem(message, client, list, "remove");
+// Fonction générique
+export async function modifyprem(message, client, action) {
+    try {
+        const remoteJid = message.key?.remoteJid;
+        if (!remoteJid) throw new Error("Invalid remote JID.");
+
+        const msgBody = message.message?.extendedTextMessage?.text || message.message?.conversation || "";
+        const args = msgBody.trim().split(/\s+/).slice(1);
+
+        let participant;
+        if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
+            participant = message.message?.extendedTextMessage?.contextInfo?.participant || message.key.participant;
+        } else if (args.length > 0) {
+            const jidMatch = args[0].match(/\d+/);
+            if (!jidMatch) throw new Error("Format invalide.");
+            participant = jidMatch[0] + "@s.whatsapp.net";
+        } else {
+            throw new Error("Aucun utilisateur spécifié.");
+        }
+
+        let list = loadPremium();
+
+        if (action === "add") {
+            if (!list.includes(participant)) {
+                list.push(participant);
+                savePremium(list);
+                await client.sendMessage(remoteJid, { text: `✅ @${participant.split("@")[0]} ajouté en Premium.`, mentions: [participant] });
+            } else {
+                await client.sendMessage(remoteJid, { text: `⚠️ @${participant.split("@")[0]} est déjà Premium.`, mentions: [participant] });
+            }
+        } else if (action === "remove") {
+            if (list.includes(participant)) {
+                list = list.filter(p => p !== participant);
+                savePremium(list);
+                await client.sendMessage(remoteJid, { text: `❌ @${participant.split("@")[0]} retiré des Premium.`, mentions: [participant] });
+            } else {
+                await client.sendMessage(remoteJid, { text: `⚠️ @${participant.split("@")[0]} n'est pas Premium.`, mentions: [participant] });
+            }
+        }
+    } catch (error) {
+        console.error("Erreur premium.js:", error);
+        await client.sendMessage(message.key.remoteJid, { text: "⚠️ Une erreur est survenue." });
+    }
+}
+
+// Exports rapides
+export async function addprem(message, client) {
+    await modifyprem(message, client, "add");
+}
+
+export async function delprem(message, client) {
+    await modifyprem(message, client, "remove");
 }
 
 export default { addprem, delprem };

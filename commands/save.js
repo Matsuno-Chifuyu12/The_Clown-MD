@@ -3,10 +3,8 @@
 // Gestion des médias ViewOnce et sauvegarde intelligente
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ //
 
-import { normalizeMessageContent } from '../Messages/normalizeContent.js';
-import pkg from 'bailey';
-const { downloadMediaMessage } = pkg;
-
+import { normalizeMessageContent } from '../../libs/functions.js';
+import { downloadMediaMessage } from 'bailey';
 import fs from 'fs';
 import path from 'path';
 
@@ -80,7 +78,7 @@ export async function save(message, client) {
         fs.unlinkSync(tempPath);
 
     } catch (err) {
-        console.error('❌ Save.js Error:', err);
+        console.error('🎴 Save.js Error:', err);
         await client.sendMessage(message.key.remoteJid, {
             text: '_Une erreur est survenue lors du traitement du message ViewOnce._'
         });
