@@ -1,9 +1,9 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Commande : prem
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 
 export async function prem(message, client) {
 
@@ -22,7 +22,7 @@ export async function prem(message, client) {
 
     const t = `
 ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
-┃ 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+┃ 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 ┃ 𝐓𝐡𝐞 𝐔𝐥𝐭𝐢𝐦𝐚𝐭𝐞 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩 𝐄𝐱𝐩𝐞𝐫𝐢𝐞𝐧𝐜𝐞
 ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
 
@@ -48,7 +48,7 @@ export async function prem(message, client) {
 `;
 
     await client.sendMessage(remoteJid, {
-        image: { url: "./assets/images/menu.jpg" }, // <-- image locale dans ton dossier
+        image: { url: "./assets/images/menu.jpg" },
         caption: t,
         quoted: message
     });
