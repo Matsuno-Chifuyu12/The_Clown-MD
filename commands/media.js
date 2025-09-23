@@ -1,5 +1,5 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // The Ultimate WhatsApp Experience
 // Commande : media.js
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -32,7 +32,7 @@ export async function photo(message, client) {
 
         await client.sendMessage(remoteJid, {
             image: fs.readFileSync(filename),
-            caption: "✨ Converti avec succès\n> 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴"
+            caption: "✨ Converti avec succès\n> 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴"
         });
 
         fs.unlinkSync(filename);
@@ -86,7 +86,4 @@ export async function tomp3(message, client) {
     }
 }
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// EXPORT
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export default { photo, tomp3 };
