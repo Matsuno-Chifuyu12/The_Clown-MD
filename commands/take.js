@@ -1,10 +1,10 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 //  The Ultimate WhatsApp Experience
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { Sticker, StickerTypes } from "wa-sticker-formatter";
-import { downloadMediaMessage } from "@whiskeysockets/bailey";
+import { downloadMediaMessage } from "baileys";
 import fs from "fs";
 import path from "path";
 
@@ -68,7 +68,7 @@ export async function take(message, client) {
         // Nettoyage
         await fs.promises.unlink(tempStickerPath);
 
-        console.log(`✅ Sticker envoyé avec succès par 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — Pack: "${pack}", Author: "${author}"`);
+        console.log(`✅ Sticker envoyé avec succès par 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 Pack: "${pack}", Author: "${author}"`);
 
     } catch (error) {
         console.error("❌ Erreur lors de la modification du sticker:", error);
