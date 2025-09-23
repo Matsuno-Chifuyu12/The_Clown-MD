@@ -1,3 +1,8 @@
+<h1>
+  <img alt="Blue Lock logo" src="images/blue-lock-logo.png" height="75"/>
+</h1>
+
+---
 # 🎴 kurona-md v1.0.0 🎴
 Un bot WhatsApp riche en fonctionnalités construit avec Node.js et https://github.com/WhiskeySockets/Baileys , doté d'automatisation, de gestion des médias, d'outils de recherche, de commandes de gestion de groupe et de sécurité.
 
@@ -46,15 +51,16 @@ par 🎴 kurona tech 🎴
 ╭┅┅ 🧰𝐔𝐓𝐈𝐋𝐒🧰 ┅┅╮
 ┃➙device
 ┃➙delsudo
-┃➙getsudo
 ┃➙fancy
+┃➙getid
+┃➙getsudo
 ┃➙owner
 ┃➙ping
 ┃➙sudo
-┃➙url
 ┃➙udapte
+┃➙urk
 ╰┅┅┅┅┅┅┅┅┅┅┅┅┅╯
-╭┅┅┅ 👤AUTONOME ┅┅┅╮
+╭┅┅┅ 👤𝐀𝐔𝐓𝐎𝐍𝐎𝐌𝐄👤 ┅┅┅╮
 ┃➳online
 ┃➳autotype
 ┃➳autoreact
@@ -62,7 +68,7 @@ par 🎴 kurona tech 🎴
 ┃➳setprefix
 ┃➳getconfig
 ┃➳like
-╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
+╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
 ╭┅┅┅ 📥𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑📥 ┅┅┅╮
 ┃⇒video
 ┃⇒snapchat
