@@ -1,16 +1,16 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestionnaire de sessions WhatsApp Multi-Device
 // Créateur : 🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "bailey";
-import configManager from '../utils/manageConfigs.js';
+import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
+import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
-import sender from '../outils/sender.js';
-import handleIncomingMessage from '../events/messageHandler.js';
+import sender from '../messanges/sender.js';
+import handleIncomingMessage from '../messages/messageHandler.js';
 
-const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴";
+const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴";
 const CREATOR = "🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴";
 
 const SESSIONS_FILE = "./sessions.json";
