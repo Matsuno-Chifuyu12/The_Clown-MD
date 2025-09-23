@@ -1,5 +1,5 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 //  Bouton.js — Gestion des messages interactifs
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -21,7 +21,7 @@ async function bouton(client, message) {
         text: "📌 Description du message",
         title: "✨ Titre du message",
         subtitle: "🔖 Sous-titre",
-        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴",
+        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴",
         interactiveButtons: [
           {
             name: "quick_reply",
@@ -50,7 +50,7 @@ async function bouton(client, message) {
         caption: "📌 Description avec image",
         title: "✨ Titre de l’image",
         subtitle: "🔖 Sous-titre",
-        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴",
+        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴",
         media: true,
         interactiveButtons: [
           {
@@ -89,7 +89,7 @@ async function bouton(client, message) {
         businessOwnerJid: "123456789@s.whatsapp.net",
         caption: "📌 Produit interactif",
         title: "✨ Catalogue",
-        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴",
+        footer: "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴",
         media: true,
         interactiveButtons: [
           {
