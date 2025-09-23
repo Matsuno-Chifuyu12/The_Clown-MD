@@ -3,7 +3,7 @@
 // Gestion des médias ViewOnce et sauvegarde intelligente
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ //
 
-import { normalizeMessageContent } from '../../libs/functions.js';
+import { normalizeMessageContent } from '../messages/normalizeContent.js';
 import { downloadMediaMessage } from 'bailey';
 import fs from 'fs';
 import path from 'path';
