@@ -1,4 +1,4 @@
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 import channelSender from '../commands/channelSender.js';
 
 export async function auto(message, client, cond, emoji = "🎴") {
