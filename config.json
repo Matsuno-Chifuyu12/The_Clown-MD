@@ -1,6 +1,6 @@
 {
   "bot": {
-    "name": "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴",
+    "name": "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴",
     "version": "1.0.0",
     "owner": {
       "name": "🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴",
@@ -19,7 +19,7 @@
     "status": {
       "autoSet": true,
       "presence": "online",
-      "activity": "🎴Kurona-MD Bot🎴"
+      "activity": "⚡ Kurona-XMD Bot"
     }
   },
   "users": {
