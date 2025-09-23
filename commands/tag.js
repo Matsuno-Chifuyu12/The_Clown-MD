@@ -1,12 +1,12 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴
+// 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Commandes de mention / TAG — Ton Majordome
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { createWriteStream } from 'fs';
-import pkg from "@whiskeysockets/bailey";
+import pkg from "baileys";
 const { downloadMediaMessage } = pkg;
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 
 const BOT_SIGNATURE = '🎩 Votre humble serviteur — 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴 🎩';
 
