@@ -41,7 +41,7 @@ export async function video(message, client) {
             return;
         }
 
-        console.log(`🎴 KURONA - Extraction d'URL: ${url}`);
+        console.log(`🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴 - Extraction d'URL: ${url}`);
 
         // Message de traitement
         await client.sendMessage(remoteJid, {
@@ -55,13 +55,12 @@ export async function video(message, client) {
             { url },
             { 
                 responseType: 'json',
-                timeout: 30000 // Timeout de 30 secondes
+                timeout: 30000
             }
         );
 
         const downloadLink = response.data.filepath;
         const videoTitle = response.data.title || 'Vidéo KURONA';
-        const thumbnail = response.data.thumbnail;
 
         if (!downloadLink) {
             throw new Error("L'API n'a pas retourné de lien de téléchargement valide");
@@ -74,55 +73,47 @@ export async function video(message, client) {
         const fileName = `kURONA_${uuidv4()}.mp4`;
         tempFilePath = path.join(tempDir, fileName);
 
-        console.log(`⬇️ Téléchargement vidéo 🎴𝛫𝑈𝑅𝛩𝛮𝛥🎴depuis: ${downloadLink}`);
+        console.log(`⬇️ Téléchargement vidéo | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴 depuis: ${downloadLink}`);
 
         // Téléchargement de la vidéo
         const videoResponse = await axios({
             method: 'GET',
             url: downloadLink,
             responseType: 'stream',
-            timeout: 60000 // Timeout de 60 secondes pour le téléchargement
+            timeout: 60000
         });
 
-        // Correction: Création du writer avec fs.createWriteStream
         const writer = (await fs.open(tempFilePath, 'w')).createWriteStream();
         videoResponse.data.pipe(writer);
 
         await new Promise((resolve, reject) => {
             writer.on('finish', resolve);
             writer.on('error', (err) => {
-                console.error("❌ Erreur d'écriture fichier 🎴𝛫𝑈𝑅𝛩𝛮𝛥🎴:", err);
+                console.error("❌ Erreur d'écriture fichier:", err);
                 reject(new Error('Échec de sauvegarde du fichier vidéo.'));
             });
         });
 
         console.log(`✅ Vidéo téléchargée: ${tempFilePath}`);
 
-        // Vérification que le fichier existe et a une taille valide
+        // Vérification de la taille du fichier
         const stats = await fs.stat(tempFilePath);
         if (stats.size === 0) {
             throw new Error("Le fichier téléchargé est vide");
         }
 
-        // Correction: Utilisation de videoTitle au lieu de video.title
+        // ➤ Envoi de la vidéo directement avec la légende
         await client.sendMessage(remoteJid, {
-            image: { url: thumbnail },
-            caption: `
-> ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
+            video: { url: tempFilePath },
+            mimetype: 'video/mp4',
+            caption: 
+`> ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
 > │       🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑉𝐼𝐷𝐸𝛩🎥🎴 
 > ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
 > │  ♧𝐓𝐢𝐭𝐫𝐞 : *${videoTitle}* 
 > ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
 > \n📥 Téléchargement réussi\n👤 Demandé par: ${username}\n\n • 🎴 *𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫* 🎴
 > 🎴 ℬ𝓎  𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴`,
-            quoted: message
-        });
-
-        // Envoi de la vidéo
-        await client.sendMessage(remoteJid, {
-            video: { url: tempFilePath },
-            mimetype: 'video/mp4',
-            caption: `🎥 ${videoTitle}\n\n⚡ *Téléchargé par 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴*`,
             quoted: message
         });
 
@@ -169,7 +160,6 @@ function getArg(body) {
     const parts = body.trim().split(/\s+/);
     if (parts.length < 2) return null;
     
-    // Retourne le premier argument après la commande
     return parts[1];
 }
 
