@@ -37,6 +37,11 @@ export async function info(message, client) {
 │  ❃ 𝗣𝗿𝗲𝗳𝗶𝘅 : [ . ]
 │  ❃ 𝗩𝗲𝗿𝘀𝗶𝗼𝗻 : v1.0.0
 │  ❃ 𝗗𝗮𝘁𝗲 : ${date}
+│  ❃ 𝗣𝗹𝘂𝗴𝗶𝗻 : 54
+╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
+
+╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
+│           𝐂 𝐎 𝐌 𝐌 𝐀 𝐍 𝐃 𝐒          
 ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
         `.trim();
 
@@ -49,8 +54,9 @@ export async function info(message, client) {
 
         // Images pour chaque catégorie
         const categoryImages = {
+            "✨MENU✨": "./assets/images/menu.png",
             "🧰𝐔𝐓𝐈𝐋𝐒🧰": "./assets/images/utils.png",
-            "👤AUTONOME": "./assets/images/autonome.png",
+            "👤𝐀𝐔𝐓𝐎𝐍𝐎𝐌𝐄👤": "./assets/images/autonome.png",
             "📥𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑📥": "./assets/images/downloader.png",
             "👑𝐆𝐑𝐎𝐔𝐏 𝐌𝐀𝐍𝐀𝐆𝐄👑": "./assets/images/group.png",
             "🎴𝐀𝐍𝐓𝐈 𝐌𝐀𝐍𝐀𝐆𝐄🎴": "./assets/images/anti.png",
@@ -58,100 +64,110 @@ export async function info(message, client) {
             "📢𝐓𝐀𝐆📢": "./assets/images/tag.png"
         };
 
-        // Sections stylisées avec cadres
+        // Sections stylisées avec cadres (triées par ordre alphabétique)
         const sections = [
+            {
+                title: "╭┅┅┅┅ ✨MENU✨ ┅┅┅┅╮",
+                rows: [
+                    { title: "┃⟶menu" },
+                    { title: "┃⟶premium" },
+                    { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
+                ]
+            },
             {
                 title: "╭┅┅ 🧰𝐔𝐓𝐈𝐋𝐒🧰 ┅┅╮",
                 rows: [
-                    { title: "┃➙.ping" },
-                    { title: "┃➙.uptime" },
-                    { title: "┃➙.device" },
-                    { title: "┃➙.owner" },
-                    { title: "┃➙.sudo" },
-                    { title: "┃➙.delsudo" },
-                    { title: "┃➙.getsudo" },
-                    { title: "┃➙.fancy" },
-                    { title: "┃➙.url" },
-                    { title: "┃➙.udapte" },
+                    { title: "┃➙delsudo" },
+                    { title: "┃➙device" },
+                    { title: "┃➙fancy" },
+                    { title: "┃➙getid" },
+                    { title: "┃➙getsudo" },
+                    { title: "┃➙owner" },
+                    { title: "┃➙ping" },
+                    { title: "┃➙sudo" },
+                    { title: "┃➙udapte" },
+                    { title: "┃➙url" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅ 👤𝐀𝐔𝐓𝐎𝐍𝐎𝐌𝐄👤 ┅┅┅╮",
                 rows: [
-                    { title: "┃➳.online" },
-                    { title: "┃➳.autotype" },
-                    { title: "┃➳.autoreact" },
-                    { title: "┃➳.autorecord" },
-                    { title: "┃➳.setprefix" },
-                    { title: "┃➳.getconfig" },
-                    { title: "┃➳.like" },
-                    { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
+                    { title: "┃➳autoreact" },
+                    { title: "┃➳autorecord" },
+                    { title: "┃➳autotype" },
+                    { title: "┃➳getconfig" },
+                    { title: "┃➳like" },
+                    { title: "┃➳online" },
+                    { title: "┃➳setprefix" },
+                    { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅ 📥𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑📥 ┅┅┅╮",
                 rows: [
-                    { title: "┃⇒.ytmp3" },
-                    { title: "┃⇒.ytmp4" },
-                    { title: "┃⇒.play" },
-                    { title: "┃⇒.tiktok" },
-                    { title: "┃⇒.fb" },
-                    { title: "┃⇒.ig" },
-                    { title: "┃⇒.pin" },
+                    { title: "┃⇒facebook" },
+                    { title: "┃⇒instagram" },
+                    { title: "┃⇒pinterest" },
+                    { title: "┃⇒play" },
+                    { title: "┃⇒snapchat" },
+                    { title: "┃⇒tiktok" },
+                    { title: "┃⇒video" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅┅ 👑𝐆𝐑𝐎𝐔𝐏 𝐌𝐀𝐍𝐀𝐆𝐄👑 ┅┅┅┅╮",
                 rows: [
-                    { title: "┃➺.promote" },
-                    { title: "┃➺.demote" },
-                    { title: "┃➺.demoteall" },
-                    { title: "┃➺.promoteall" },
-                    { title: "┃➺.kick" },
-                    { title: "┃➺.kickall" },
-                    { title: "┃➺.invite" },
-                    { title: "┃➺.welcome" },
-                    { title: "┃➺.mute" },
-                    { title: "┃➺.unmute" },
+                    { title: "┃➺bye" },
+                    { title: "┃➺demote" },
+                    { title: "┃➺demoteall" },
+                    { title: "┃➺invite" },
+                    { title: "┃➺kick" },
+                    { title: "┃➺kickall" },
+                    { title: "┃➺mute" },
+                    { title: "┃➺promote" },
+                    { title: "┃➺promoteall" },
+                    { title: "┃➺unmute" },
+                    { title: "┃➺welcome" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅┅ 🎴𝐀𝐍𝐓𝐈 𝐌𝐀𝐍𝐀𝐆𝐄🎴 ┅┅┅┅╮",
                 rows: [
-                    { title: "┃➜.antipromote" },
-                    { title: "┃➜.antidemote" },
-                    { title: "┃➜.antitag" },
-                    { title: "┃➜.antidevice" },
-                    { title: "┃➜.antigetid" },
-                    { title: "┃➜.antimention" },
-                    { title: "┃➜.antilink" },
-                    { title: "┃➜.antibot" }
+                    { title: "┃➜antibot" },
+                    { title: "┃➜antidemote" },
+                    { title: "┃➜antidevice" },
+                    { title: "┃➜antilink" },
+                    { title: "┃➜antimedia" },
+                    { title: "┃➜antimention" },
+                    { title: "┃➜antipromote" },
+                    { title: "┃➜antispam" },
+                    { title: "┃➜antitag" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅ 💾𝐌𝐄𝐃𝐈𝐀💾 ┅┅┅╮",
                 rows: [
-                    { title: "┃⮕.sticker" },
-                    { title: "┃⮕.toaudio" },
-                    { title: "┃⮕.photo" },
-                    { title: "┃⮕.vv" },
-                    { title: "┃⮕.take" },
-                    { title: "┃⮕.save" },
+                    { title: "┃⮕photo" },
+                    { title: "┃⮕save" },
+                    { title: "┃⮕sticker" },
+                    { title: "┃⮕take" },
+                    { title: "┃⮕toaudio" },
+                    { title: "┃⮕vv" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             },
             {
                 title: "╭┅┅┅ 📢𝐓𝐀𝐆📢 ┅┅┅╮",
                 rows: [
-                    { title: "┃⇨.tagall" },
-                    { title: "┃⇨.tagadmin" },
-                    { title: "┃⇨.tag" },
-                    { title: "┃⇨.settag" },
-                    { title: "┃⇨.respons" },
+                    { title: "┃➳respons" },
+                    { title: "┃➳settag" },
+                    { title: "┃➳tag" },
+                    { title: "┃➳tagadmin" },
+                    { title: "┃➳tagall" },
                     { title: "╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯" }
                 ]
             }
@@ -203,4 +219,3 @@ export async function info(message, client) {
 }
 
 export default info;
-              
