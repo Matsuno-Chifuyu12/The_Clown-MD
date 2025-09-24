@@ -44,9 +44,9 @@ async function connectToWhatsApp(handleMessage) {
             }
         });
 
-        // 📲 Pairing code (remplace le QR code)
+        // 📲 Pairing code 
         if (!sock.authState.creds.registered) {
-            const phoneNumber = process.env.WA_NUMBER || ""; // numéro ex: 237690xxxxxx
+            const phoneNumber = process.env.WA_NUMBER || "";
             if (!phoneNumber) {
                 throw new Error("❌ Aucun numéro configuré. Défini WA_NUMBER dans tes variables d'environnement.");
             }
