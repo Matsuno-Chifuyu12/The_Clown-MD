@@ -3,7 +3,7 @@
 // Point d'entrée principal
 
 import connectToWhatsApp from './auth/authHandler.js';
-import handleIncomingMessage from './events/messageHandler.js';
+import handleIncomingMessage from './messages/messageHandler.js';
 import reconnect from './events/reconnection.js';
 import { startBot } from './events/bot.js';
 import { MODE } from './config.js';
