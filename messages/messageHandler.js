@@ -42,6 +42,27 @@ import fancy from '../commands/fancy.js';
 import owner from '../commands/owner.js';
 import kurona from '../commands/kurona.js';
 import img from '../commands/img.js';
+import facebook from '../commands/facebook.js';
+import instagram from '../commands/instagram.js';
+import pinterest from '../commands/pinterest.js';
+import snapchat from '../commands/snapchat.js';
+import antipromote from '../commands/antipromote.js';
+import antidemote from '../commands/antidemote.js';
+import antitag from '../commands/antitag.js';
+import antidevice from '../commands/antidevice.js';
+import antimention from '../commands/antimention.js';
+import antilink from '../commands/antilink.js';
+import antispam from '../commands/antispam.js';
+import antibot from '../commands/antibot.js';
+import antimedia from '../commands/antimedia.js';
+import welcome from '../commands/welcome.js';
+import mute from '../commands/mute.js';
+import unmute from '../commands/unmute.js';
+import invite from '../commands/invite.js';
+import settag from '../commands/settag.js';
+import respons from '../commands/respons.js';
+import tagall from '../commands/tagall.js';
+import tagadmin from '../commands/tagadmin.js';
 
 // Cache des données statiques
 export let creator = ["237683614362@s.whatsapp.net"];
@@ -94,7 +115,7 @@ export async function handleIncomingMessage(event, client) {
 
     const messages = event.messages;
     const userConfig = await getUserConfig(number);
-    const prefix = userConfig.prefix || '';
+    const prefix = userConfig.prefix || '.';
 
     // Traitement parallèle des messages
     await Promise.all(messages.map(async (message) => {
@@ -149,177 +170,314 @@ async function handlePrefixedWhatsAppCommand(message, client, number, prefix, ap
         approvedUsers.includes(remoteJidBase) ||
         [userConfig.lid].includes(message.key.participant || message.key.remoteJid);
 
+    const isGroup = message.key.remoteJid?.endsWith('@g.us');
+    const isPremium = premium.includes(number + "@s.whatsapp.net");
+
     // Réaction immédiate
     await react(message, client);
 
     // Routing des commandes
     try {
         switch (command) {
+            // ✨ MENU ✨
+            case 'menu':
+                await info(message, client);
+                break;
+            case 'premium':
+                await prem(message, client);
+                break;
+
+            // 🧰 UTILS 🧰
+            case 'delsudo':
+                await sudo.delsudo(message, client);
+                break;
+            case 'device':
+                await device(message, client);
+                break;
+            case 'fancy':
+                await fancy(message, client);
+                break;
+            case 'getid':
+                await channelSender(message, client, `🆔 ID: ${message.key.remoteJid}`, 1);
+                break;
+            case 'getsudo':
+                await sudo.getsudo(message, client);
+                break;
+            case 'owner':
+                await owner(message, client);
+                break;
+            case 'ping':
+                await pingCommand(message, client);
+                break;
+            case 'sudo':
+                await sudo.addsudo(message, client);
+                break;
+            case 'udapte':
+                await update(message, client);
+                break;
+            case 'url':
+                await tourl(message, client);
+                break;
+
+            // 👤 AUTONOME 👤
+            case 'online':
+                await presence(message, client, userConfig.online);
+                break;
+            case 'autotype':
+                await auto.autotype(message, client);
+                break;
+            case 'autoreact':
+                await reactions.autoreact(message, client);
+                break;
+            case 'autorecord':
+                await auto.autorecord(message, client);
+                break;
+            case 'setprefix':
+                await set.setprefix(message, client, args[0]);
+                break;
+            case 'getconfig':
+                await getconf(message, client, number);
+                break;
+            case 'like':
+                await statusLike(message, client, userConfig.like);
+                break;
+
+            // 📥 DOWNLOADER 📥
+            case 'video':
+                await video(message, client);
+                break;
+            case 'snapchat':
+                await snapchat(message, client);
+                break;
+            case 'play':
+                await play(message, client);
+                break;
+            case 'tiktok':
+                await tiktok(message, client);
+                break;
+            case 'facebook':
+                await facebook(message, client);
+                break;
+            case 'instagram':
+                await instagram(message, client);
+                break;
+            case 'pinterest':
+                await pinterest(message, client);
+                break;
+
+            // 👑 GROUP MANAGEMENT 👑
+            case 'promote':
+                if (isAuthorized && isGroup) {
+                    await group.promote(message, client);
+                    await channelSender(message, client, "✅ Promotion réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'demote':
+                if (isAuthorized && isGroup) {
+                    await group.demote(message, client);
+                    await channelSender(message, client, "✅ Rétrogradation réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'demoteall':
+                if (isAuthorized && isGroup) {
+                    await group.dall(message, client, userConfig.lid);
+                    await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'promoteall':
+                if (isAuthorized && isGroup) {
+                    await group.pall(message, client, userConfig.lid);
+                    await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'kick':
+                if (isAuthorized && isGroup) {
+                    await group.kick(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'kickall':
+                if (isAuthorized && isGroup) {
+                    await group.kickall(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'invite':
+                if (isAuthorized && isGroup) {
+                    await invite(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'welcome':
+                if (isAuthorized && isGroup) {
+                    await welcome(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'mute':
+                if (isAuthorized && isGroup) {
+                    await mute(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'unmute':
+                if (isAuthorized && isGroup) {
+                    await unmute(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'bye':
+                if (isAuthorized && isGroup) {
+                    await group.bye(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+
+            // 🎴 ANTI MANAGEMENT 🎴
+            case 'antipromote':
+                if (isAuthorized) {
+                    await antipromote(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antidemote':
+                if (isAuthorized) {
+                    await antidemote(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antitag':
+                if (isAuthorized) {
+                    await antitag(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antidevice':
+                if (isAuthorized) {
+                    await antidevice(message, client);
+                }
+                break;
+            case 'antimention':
+                if (isAuthorized) {
+                    await antimention(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antilink':
+                if (isAuthorized) {
+                    await antilink(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antispam':
+                if (isAuthorized) {
+                    await antispam(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antibot':
+                if (isAuthorized) {
+                    await antibot(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+            case 'antimedia':
+                if (isAuthorized) {
+                    await antimedia(message, client);
+                } else {
+                    await channelSender(message, client, "❌ Commande réservée aux admins | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
+                }
+                break;
+
+            // 💾 MEDIA 💾
+            case 'sticker':
+                await sticker(message, client);
+                break;
+            case 'toaudio':
+                await media.tomp3(message, client);
+                break;
+            case 'photo':
+                await media.photo(message, client);
+                break;
+            case 'vv':
+                await viewonce(message, client);
+                break;
+            case 'take':
+                await take(message, client);
+                break;
+            case 'save':
+                await save(message, client);
+                break;
+
+            // 📢 TAG 📢
+            case 'tag':
+                await tag.tag(message, client);
+                break;
+            case 'tagadmin':
+                await tagadmin(message, client);
+                break;
+            case 'tagall':
+                await tagall(message, client);
+                break;
+            case 'settag':
+                await settag(message, client);
+                break;
+            case 'respons':
+                await respons(message, client);
+                break;
+
+            // Commandes premium
             case 'connect':
-                if (premium.includes(number + "@s.whatsapp.net")) {
+                if (isPremium) {
                     await connect.connect(message, client, args[0]);
                 } else {
                     await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 }
                 break;
 
-            case 'prem-menu':
-                await prem(message, client);
-                break;
-
             case 'disconnect':
-                if (premium.includes(number + "@s.whatsapp.net")) {
+                if (isPremium) {
                     await disconnect(message, client);
                 } else {
                     await channelSender(message, client, "❌ Commande réservée aux premium | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
                 }
                 break;
 
-            case 'ping':
-                await pingCommand(message, client);
-                break;
-
-            case 'update':
-                await update(message, client);
-                break;
-
-            case 'tourl':
-                await tourl(message, client);
-                break;
-
-            case 'getconfig':
-                await getconf(message, client, number);
-                break;
-
-            case 'getpp':
-                await getpp(message, client);
-                break;
-
-            case 'tiktok':
-                await tiktok(message, client);
-                break;
-
-            case 'owner':
-                await owner(message, client);
-                break;
-
-            case 'fancy':
-                await fancy(message, client);
-                break;
-
-            case 'setpp':
-                await pp(message, client);
-                break;
-
-            case 'photo':
-                await media.photo(message, client);
-                break;
-
-            case 'toaudio':
-                await media.tomp3(message, client);
-                break;
-
-            case 'menu':
-                await info(message, client);
-                break;
-
-            case 'autoreact':
-                await reactions.autoreact(message, client);
-                break;
-
-            case 'bye':
-            case 'kickall':
-            case 'purge':
-            case 'demoteall':
-            case 'promoteall':
-                if (isAuthorized) {
-                    await handleAdminCommand(command, message, client, userConfig.lid);
-                } else {
-                    await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
-                }
-                break;
-
-            case 'kick':
-            case 'promote':
-            case 'demote':
-                await handleGroupCommand(command, message, client, isAuthorized);
-                break;
-
-            case 'vv':
-                await viewonce(message, client);
-                break;
-
             default:
                 // Commandes génériques
                 if (commands[command]) {
                     await commands[command](message, client, args);
+                } else {
+                    await channelSender(message, client, `❌ Commande "${command}" non reconnue | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`, 2);
                 }
                 break;
         }
     } catch (err) {
         console.error(`Error executing command "${command}":`, err);
-        await client.sendMessage(message.key.remoteJid, { text: `❌ An error occurred: ${err.message}` });
-    }
-}
-
-// Gestion des commandes admin
-async function handleAdminCommand(command, message, client, lid) {
-    try {
-        switch (command) {
-            case 'bye':
-                await group.bye(message, client);
-                break;
-            case 'kickall':
-                await group.kickall(message, client);
-                break;
-            case 'purge':
-                await group.purge(message, client);
-                break;
-            case 's-kill':
-                await kill(message, client);
-                break;
-            case 'demoteall':
-                await group.dall(message, client, lid);
-                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
-                break;
-            case 'promoteall':
-                await group.pall(message, client, lid);
-                await channelSender(message, client, "✅ Succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 1);
-                break;
-        }
-    } catch (error) {
-        await client.sendMessage(message.key.remoteJid, {
-            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`
+        await client.sendMessage(message.key.remoteJid, { 
+            text: `❌ Erreur avec la commande "${command}": ${err.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴` 
         });
-        console.error(`Erreur commande ${command}:`, error);
     }
-}
-
-// Gestion des commandes groupe
-async function handleGroupCommand(command, message, client, isAuthorized) {
-    if (!isAuthorized) {
-        await channelSender(message, client, "❌ Commande réservée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
-        return;
-    }
-
-    try {
-        switch (command) {
-            case 'kick':
-                await group.kick(message, client);
-                break;
-            case 'promote':
-                await group.promote(message, client);
-                await channelSender(message, client, "✅ Promotion réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
-                break;
-            case 'demote':
-                await group.demote(message, client);
-                await channelSender(message, client, "✅ Rétrogradation réussie | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴", 2);
-                break;
         }
-    } catch (error) {
-        await client.sendMessage(message.key.remoteJid, {
-            text: `❌ Erreur commande ${command}: ${error.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`
-        });
-        console.error(`Erreur commande ${command}:`, error);
-    }
-                                          }
