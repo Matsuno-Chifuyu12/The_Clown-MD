@@ -5,7 +5,7 @@
 
 import fs from 'fs';
 import * as commands from '../commands/index.js';
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 import auto from '../commands/auto.js';
 import tag from '../commands/tag.js';
 import group from '../commands/group.js';
