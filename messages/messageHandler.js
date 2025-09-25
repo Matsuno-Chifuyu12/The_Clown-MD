@@ -480,4 +480,4 @@ async function handlePrefixedWhatsAppCommand(message, client, number, prefix, ap
             text: `❌ Erreur avec la commande "${command}": ${err.message} | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴` 
         });
     }
-        }
+}
