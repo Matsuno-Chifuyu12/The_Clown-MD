@@ -1,18 +1,36 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
+#  Git Ignore Configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Other files and folders
-.settings/
+# Node.js
+node_modules/
+package-lock.json
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Sessions & Authentification
+auth/
+auth_info_baileys/
+session/
+sessions/
+*.session.json
+*.auth.json
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# Builds & Temp
+dist/
+build/
+tmp/
+temp/
+.cache/
+
+# Environnements
+.env
+
+
+# Git & Updates temporaires
+.temp_bot_update/
+
+
+# Config (local secrets)
+*.local.*          # Tous les fichiers de configuration locale (ex: config.local.json, env.local.js)
+*.env              # Fichiers d'environnement contenant les variables sensibles
+*.credentials.json
