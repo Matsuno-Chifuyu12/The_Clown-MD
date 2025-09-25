@@ -1,5 +1,5 @@
 import { Sticker, StickerTypes } from "wa-sticker-formatter";
-import { downloadMediaMessage } from "baileys";
+import { downloadMediaMessage } from "@whiskeysockets/bailey";
 import fs from "fs/promises";
 import path from "path";
 import sharp from "sharp";
@@ -31,7 +31,7 @@ export async function sticker(message, client) {
 
         // Envoi d'un message de traitement
         await client.sendMessage(remoteJid, { 
-            text: "🔄 Traitement en cours... Création de votre sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴" 
+            text: "🔄 Traitement en cours... Création de votre sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 🎴" 
         });
 
         // Téléchargement du média
@@ -55,10 +55,10 @@ export async function sticker(message, client) {
         await fs.writeFile(tempInput, mediaBuffer);
 
         if (isVideo) {
-            console.log("⚙️ Traitement de la vidéo pour le sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴...");
+            console.log("⚙️ Traitement de la vidéo pour le sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 🎴...");
             await processVideo(tempInput, tempOutput);
         } else {
-            console.log("⚙️ Traitement de l'image pour le sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴...");
+            console.log("⚙️ Traitement de l'image pour le sticker  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 🎴...");
             await sharp(tempInput)
                 .resize(512, 512, { 
                     fit: "inside",
@@ -74,7 +74,7 @@ export async function sticker(message, client) {
 
         // Création du sticker avec branding KURONA
         const sticker = new Sticker(tempOutput, {
-            pack: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`,
+            pack: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴`,
             author: `Par ${username}`,
             type: isVideo ? StickerTypes.FULL : StickerTypes.DEFAULT,
             quality: 90,
@@ -111,10 +111,10 @@ async function processVideo(inputPath, outputPath) {
                 "-an", // Pas d'audio
                 "-vsync", "0",
                 "-compression_level", "6",
-                "-threads", "4" 
+                "-threads", "4" // Utilisation de plus de threads pour plus de performance
             ])
             .on("start", (cmdline) => {
-                console.log("🚀 Lancement de la conversion vidéo  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴");
+                console.log("🚀 Lancement de la conversion vidéo  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴");
             })
             .on("progress", (progress) => {
                 if (progress.percent) {
@@ -126,7 +126,7 @@ async function processVideo(inputPath, outputPath) {
                 resolve();
             })
             .on("error", (err) => {
-                console.error("❌ Erreur de conversion vidéo  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴:", err);
+                console.error("❌ Erreur de conversion vidéo  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴:", err);
                 reject(err);
             })
             .save(outputPath);
