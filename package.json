@@ -2,7 +2,7 @@
   "name": "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 ",
   "version": "1.0.0",
   "description": "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 | A multi-device WhatsApp & Telegram bot, designed for management, media and group. A versatile all-in-one digital companion, built with precision and performance. Built on an unofficial WhatsApp API, inspired by the Whiskeysockets/Baileys architecture, exclusive 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑩𝛥𝑰𝑳𝑺🎴",
-  "main": "index.js"
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
