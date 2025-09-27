@@ -11,7 +11,7 @@ const responseCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 /**
- * Commande kurona → IA qui répond aux questions posées
+ * Commande kurona → IA 
  */
 export async function kurona(message, client) {
     const remoteJid = message.key?.remoteJid;
@@ -44,7 +44,7 @@ export async function kurona(message, client) {
 
         // Message d’attente stylisé
         await client.sendMessage(remoteJid, {
-            text: `🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴\n\n⚡ Traitement en cours...\n"Je consulte mes archives numériques."`,
+            text: `🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴\n\n> ⏳ Traitement en cours...\n"Je consulte mes archives numériques."`,
             quoted: message
         });
 
