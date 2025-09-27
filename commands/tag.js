@@ -18,13 +18,17 @@ export async function tagall(message, client) {
         const group = await client.groupMetadata(jid);
         const participants = group.participants.map(p => p.id);
 
-        const mentionsText = participants.map(u => `• Monsieur/Madame @${u.split('@')[0]}`).join('\n');
+        // Format des mentions avec numérotation 🎴① 🎴② 🎴③ ...
+        const mentionsText = participants.map((u, index) => 
+            `🎴${index + 1} @${u.split('@')[0]}`
+        ).join('\n');
+
         const tagMessage = `
 > ╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
 > │    🎴HONORED CALL TO ALL🎴         │
 > ╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯
 
-Avec tout le respect qui vous est dû, @${message.key.participant?.split('@')[0] || 'Votre Excellence'} présente l’invocation :
+Avec tout le respect qui vous est dû, @${message.key.participant?.split('@')[0] || 'Votre Excellence'} présente l'invocation :
 
 ${mentionsText}
 
@@ -38,20 +42,25 @@ ${BOT_SIGNATURE}`.trim();
 
 export async function tagadmin(message, client) {
     const jid = message.key.remoteJid;
-    if (!jid.includes('@g.us')) return client.sendMessage(jid, { text: 'Ah, je crains que cette commande ne soit disponible qu’au sein d’un cercle privilégié…' });
+    if (!jid.includes('@g.us')) return client.sendMessage(jid, { text: 'Ah, je crains que cette commande ne soit disponible qu\'au sein d\'un cercle privilégié…' });
 
     const botNumber = client.user.id.split(':')[0] + '@s.whatsapp.net';
     try {
         const { participants } = await client.groupMetadata(jid);
         const admins = participants.filter(p => p.admin && p.id !== botNumber).map(p => p.id);
 
-        if (!admins.length) return client.sendMessage(jid, { text: 'Il semblerait qu’aucun membre de distinction ne soit présent à l’instant.' });
+        if (!admins.length) return client.sendMessage(jid, { text: 'Il semblerait qu\'aucun membre de distinction ne soit présent à l\'instant.' });
 
-        const text = `🎩 *Les honorables administrateurs sont priés de se manifester:*\n${admins.map(u => `• Monsieur/Madame @${u.split('@')[0]}`).join('\n')}`;
+        // Format des mentions admin avec numérotation 🎴① 🎴② 🎴③ ...
+        const adminMentions = admins.map((u, index) => 
+            `🎴${index + 1} @${u.split('@')[0]}`
+        ).join('\n');
+
+        const text = `🎩 *Les honorables administrateurs sont priés de se manifester:*\n\n${adminMentions}`;
         await client.sendMessage(jid, { text, mentions: admins });
     } catch (err) {
         console.error("Erreur lors de l'invocation des administrateurs :", err);
-        await client.sendMessage(jid, { text: 'Une malencontreuse erreur a empêché l’invocation des administrateurs.' });
+        await client.sendMessage(jid, { text: 'Une malencontreuse erreur a empêché l\'invocation des administrateurs.' });
     }
 }
 
@@ -64,32 +73,127 @@ export async function tag(message, client) {
         const participants = group.participants.map(u => u.id);
         const msgBody = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
         const commandParts = msgBody.slice(1).trim().split(/\s+/);
-        const text = commandParts.slice(1).join(' ') || 'Veuillez prêter attention à ce message distingué…';
+        const customText = commandParts.slice(1).join(' ') || 'Veuillez prêter attention à ce message distingué…';
 
         const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+        
+        // Gestion des messages cités avec tous les types de médias
         if (quotedMsg) {
             if (quotedMsg.stickerMessage) {
-                await client.sendMessage(jid, { sticker: quotedMsg.stickerMessage, mentions: participants });
-            } else {
-                const qText = quotedMsg.conversation || quotedMsg.extendedTextMessage?.text || '';
-                await client.sendMessage(jid, { text: qText, mentions: participants });
+                await client.sendMessage(jid, { 
+                    sticker: quotedMsg.stickerMessage, 
+                    mentions: participants 
+                });
+                return;
             }
-            return;
+            else if (quotedMsg.imageMessage) {
+                await client.sendMessage(jid, { 
+                    image: quotedMsg.imageMessage,
+                    caption: quotedMsg.imageMessage.caption || "",
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.videoMessage) {
+                await client.sendMessage(jid, { 
+                    video: quotedMsg.videoMessage,
+                    caption: quotedMsg.videoMessage.caption || "",
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.audioMessage) {
+                await client.sendMessage(jid, { 
+                    audio: quotedMsg.audioMessage,
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.documentMessage) {
+                await client.sendMessage(jid, { 
+                    document: quotedMsg.documentMessage,
+                    caption: quotedMsg.documentMessage.caption || "",
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.contactMessage) {
+                await client.sendMessage(jid, { 
+                    contacts: {
+                        contacts: [quotedMsg.contactMessage]
+                    },
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.pollMessage) {
+                await client.sendMessage(jid, { 
+                    poll: quotedMsg.pollMessage,
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.locationMessage) {
+                await client.sendMessage(jid, { 
+                    location: quotedMsg.locationMessage,
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.liveLocationMessage) {
+                await client.sendMessage(jid, { 
+                    liveLocation: quotedMsg.liveLocationMessage,
+                    mentions: participants 
+                });
+                return;
+            }
+            else if (quotedMsg.buttonsMessage || quotedMsg.templateMessage) {
+                const buttonMessage = quotedMsg.buttonsMessage || quotedMsg.templateMessage;
+                await client.sendMessage(jid, {
+                    text: buttonMessage.contentText || buttonMessage.text || "Message avec boutons",
+                    mentions: participants,
+                    ...(quotedMsg.buttonsMessage && { buttons: quotedMsg.buttonsMessage.buttons }),
+                    ...(quotedMsg.templateMessage && { template: quotedMsg.templateMessage })
+                });
+                return;
+            }
+            else {
+                // Message texte standard avec format des mentions
+                const qText = quotedMsg.conversation || quotedMsg.extendedTextMessage?.text || '';
+                const mentionsText = participants.map((u, index) => 
+                    `🎴${index + 1} @${u.split('@')[0]}`
+                ).join('\n');
+                
+                const finalText = `${qText}\n\n${mentionsText}`;
+                await client.sendMessage(jid, { 
+                    text: finalText, 
+                    mentions: participants 
+                });
+                return;
+            }
         }
 
-        await client.sendMessage(jid, { text, mentions: participants });
+        // Message texte simple sans citation avec format des mentions
+        const mentionsText = participants.map((u, index) => 
+            `🎴${index + 1} @${u.split('@')[0]}`
+        ).join('\n');
+        
+        const finalText = `${customText}\n\n${mentionsText}`;
+        await client.sendMessage(jid, { 
+            text: finalText, 
+            mentions: participants 
+        });
     } catch (err) {
         console.error("Erreur lors de l'invocation générale :", err);
     }
 }
 
-// Fonctions settag et tagoption conservées mais avec messages raffinés
 export async function settag(message, client) {
     const jid = message.key.remoteJid;
     const number = client.user.id.split(':')[0];
     const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
 
-    if (!quotedMsg?.audioMessage) return client.sendMessage(jid, { text: 'Veuillez répondre avec un message audio pour définir la notification, s’il vous plaît.' });
+    if (!quotedMsg?.audioMessage) return client.sendMessage(jid, { text: 'Veuillez répondre avec un message audio pour définir la notification, s\'il vous plaît.' });
 
     try {
         const audioStream = await downloadMediaMessage({ message: quotedMsg }, "stream");
@@ -131,4 +235,4 @@ export async function tagoption(message, client) {
     }
 }
 
-export default { tagall, tagadmin, tag, settag, tagoption };
+export default { tagall, tagadmin, tag, respond, settag, tagoption };
