@@ -53,12 +53,12 @@ export async function info(message, client) {
 
         // Images pour chaque catégorie
         const categoryImages = {
-            "✨MENU✨": "./assets/images/menu.png",
+            "✨𝐌𝐄𝐍𝐔✨": "./assets/images/menu.png",
             "🧰𝐔𝐓𝐈𝐋𝐒🧰": "./assets/images/utils.png",
             "👤𝐀𝐔𝐓𝐎𝐍𝐎𝐌𝐄👤": "./assets/images/autonome.png",
             "📥𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑📥": "./assets/images/downloader.png",
-            "👑𝐆𝐑𝐎𝐔𝐏 𝐌𝐀𝐍𝐀𝐆𝐄👑": "./assets/images/group.png",
-            "🎴𝐀𝐍𝐓𝐈 𝐌𝐀𝐍𝐀𝐆𝐄🎴": "./assets/images/anti.png",
+            "👑𝐆𝐑𝐎𝐔𝐏-𝐌𝐀𝐍𝐀𝐆𝐄👑": "./assets/images/group.png",
+            "🎴𝐀𝐍𝐓𝐈 - 𝐌𝐀𝐍𝐀𝐆𝐄🎴": "./assets/images/anti.png",
             "💾𝐌𝐄𝐃𝐈𝐀💾": "./assets/images/media.png",
             "📢𝐓𝐀𝐆📢": "./assets/images/tag.png"
         };
