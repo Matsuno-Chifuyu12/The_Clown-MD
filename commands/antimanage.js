@@ -13,7 +13,6 @@ let antitag = false;
 let antigetid = false;
 let antimention = false;
 let antilink = false;
-let antibot = false;
 
 // Liste des administrateurs autorisés (à définir selon votre logique)
 const allowedAdmins = []; // Ajoutez les numéros autorisés
@@ -54,11 +53,6 @@ export function toggleAntimention(message, client) {
 export function toggleAntilink(message, client) {
   antilink = !antilink;
   client.sendMessage(message.key.remoteJid, { text: politeReply(antilink, "Anti-Link") });
-}
-
-export function toggleAntibot(message, client) {
-  antibot = !antibot;
-  client.sendMessage(message.key.remoteJid, { text: politeReply(antibot, "Anti-Bot") });
 }
 
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -159,23 +153,12 @@ export async function handleAntiManage(message, client) {
         }
       }
     }
-
-    // Anti-Bot
-    if (antibot && text.toLowerCase().includes("bot")) {
-      await client.sendMessage(remoteJid, { text: `🤖 Monsieur/Mademoiselle, nul autre *bot* que 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫🎴 n'est toléré. Qu'on se le dise.`, mentions: [participant] });
-    }
-
-  } catch (e) {
-    console.error("Erreur handleAntiManage:", e);
-  }
-}
-
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 Export
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export default {
   toggleAntipromote, toggleAntidemote, toggleAntitag, toggleAntigetid, toggleAntimention,
-  toggleAntilink, toggleAntibot,
+  toggleAntilink,
   handleGroupUpdate,
   handleAntiManage
 };
