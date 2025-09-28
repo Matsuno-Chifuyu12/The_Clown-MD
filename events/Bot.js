@@ -1,6 +1,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
-// Telegram Bot Starter (Optimized)
+// Telegram Bot (Ultra-Optimisé 1000%)
+// Style : Majordome Sébastien Michaelis
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import TelegramBot from 'node-telegram-bot-api';
@@ -13,56 +14,52 @@ export let bot = null;
 
 export async function startBot() {
     try {
-        // 🔎 Récupération du dernier update pour démarrage propre
         let lastUpdateId = 0;
+
+        // ⚜ Pré-initialisation : récupération du dernier update (sécurité)
         try {
             const { data } = await axios.get(
-                `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`,
-                { timeout: 5000 }
+                `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`
             );
             if (data.ok && data.result.length > 0) {
                 lastUpdateId = data.result[data.result.length - 1].update_id + 1;
             }
         } catch {
-            console.warn('⚠️ Impossible de récupérer les updates, démarrage à partir de zéro');
+            console.warn("⚠️ Impossible d'obtenir les updates. Initialisation à zéro.");
         }
 
-        // 🤖 Initialisation du bot
+        // ⚜ Initialisation bot hyper-performante
         bot = new TelegramBot(TELEGRAM_BOT_TOKEN, {
             polling: {
-                autoStart: false, // on démarre manuellement
-                interval: 300,    // toutes les 300ms
+                autoStart: true,            // lancement immédiat
+                interval: 100,              // cycle rapide et fluide
                 params: { offset: lastUpdateId }
             },
             request: {
-                timeout: 10000,
-                agentOptions: { keepAlive: true, maxSockets: 25 }
+                // ❌ suppression des timeouts (connexion persistante)
+                timeout: 0,
+                agentOptions: { keepAlive: true, maxSockets: Infinity }
             }
         });
 
-        // 🚀 Lancer le polling
-        bot.startPolling();
-
-        // 🔄 Gestion reconnexion & events
-        reconnect();
+        // ⚜ Gestion reconnexion et handler principal
+        reconnect(bot);
         messageHandler(bot);
 
-        console.log('🚀 🤖 Telegram bot opérationnel | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴');
+        console.log("🎩 Le bot 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 est désormais opérationnel, maître.");
 
-        // 🛑 Nettoyage à la fermeture
+        // ⚜ Arrêt propre si interruption système
         process.on('SIGINT', () => {
+            console.log("🛑 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Je cesse toute activité, avec élégance.");
             bot.stopPolling();
-            console.log('🛑 Bot arrêté proprement');
             process.exit(0);
         });
 
     } catch (error) {
-        console.error('💥 Échec démarrage bot Telegram:', error.message);
+        console.error("💥 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Incident lors du démarrage :", error.message);
 
-        // 🔄 Tentative de redémarrage automatique
-        setTimeout(() => {
-            console.log('🔄 Redémarrage automatique...');
-            startBot();
-        }, 5000);
+        // ⚜ Relance immédiate et illimitée
+        console.log("🔄 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Tentative de redémarrage inlassable...");
+        startBot();
     }
 }
