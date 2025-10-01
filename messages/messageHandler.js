@@ -55,6 +55,7 @@ import antimedia from '../commands/antimedia.js';
 import welcome from '../commands/welcome.js';
 import left from '../commands/left.js';
 import mute from '../commands/mute.js';
+import set from '../commands/set.js
 import unmute from '../commands/unmute.js';
 import invite from '../commands/invite.js';
 import settag from '../commands/settag.js';
