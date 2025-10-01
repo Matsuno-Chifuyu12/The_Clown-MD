@@ -28,7 +28,7 @@ import sticker from '../commands/sticker.js';
 import play from '../commands/play.js';
 import connect from '../commands/connect.js';
 import disconnect from '../commands/disconnect.js';
-import sender from '../commands/sender.js';
+import sender from '../messages/sender.js';
 import dlt from '../commands/dlt.js';
 import save from '../commands/save.js';
 import pp from '../commands/pp.js';
