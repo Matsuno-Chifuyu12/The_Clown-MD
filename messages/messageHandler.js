@@ -104,7 +104,7 @@ function extractWhatsAppMessage(message) {
     if (message.message?.videoMessage?.caption) {
         return message.message.videoMessage.caption;
     }
-    im (message.message?.buttonsResponseMessage?.selectedButtonId) {
+    if (message.message?.buttonsResponseMessage?.selectedButtonId) {
         return message.message.buttonsResponseMessage.selectedButtonId;
     }
     if (message.message?.listResponseMessage?.title) {
