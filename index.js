@@ -5,7 +5,7 @@
 
 import fs from "fs";
 import path from "path";
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 import { execSync, spawn } from "child_process";
 import { fileURLToPath } from "url";
 
