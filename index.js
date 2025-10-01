@@ -1,11 +1,11 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛭𝛥 — 𝛭𝑫 🎴
-// Script de mise à jour pour Baileys 7.x (version light)
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
+// Script de mise à jour pour Baileys 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import f from "fs";
 import p from "path";
-import c from "./utils/manageConfigs.js";
+import c from "./utils/managerConfigs.js";
 import { execSync as eS, spawn as sP } from "child_process";
 
 const _s = (x) => Buffer.from(x, "base64").toString("utf8");
