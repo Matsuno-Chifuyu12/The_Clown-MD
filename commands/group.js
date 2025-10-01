@@ -282,11 +282,31 @@ export async function unmute(message, client) {
   }
 }
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 📦 Export
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+// 🔹 Left / Quit Group  
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+export async function left(message, client) {
+    const remoteJid = message.key.remoteJid;
+
+    try {
+        await client.sendMessage(remoteJid, {
+            text: `👋🏾 *[🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴] je prends congé…* je me retire avec élégance de ce salon.`
+        });
+
+        // Quitter le groupe
+        await client.groupLeave(remoteJid);
+
+        console.log(`✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴] a quitté le groupe : ${remoteJid}`);
+    } catch (e) {
+        console.error("Erreur left:", e);
+        await client.sendMessage(remoteJid, {
+            text: "❌ *Mon Seigneur, je ne peux me retirer…* une force invisible m'en empêche."
+        });
+    }
+}
+
 export default {
   promote, demote, promoteall, demoteall,
   kick, kickall, invite,
-  welcome, mute, unmute
+  welcome, mute, unmute, left
 };
