@@ -10,7 +10,7 @@ import tag from '../commands/tag.js';
 import group from '../commands/group.js';
 import presence from '../commands/online.js';
 import reactions from '../commands/reactions.js';
-import statusLike from '../commands/statuslike.js';
+import like from '../commands/like.js';
 import channelSender from '../commands/channelSender.js';
 import pingCommand from '../commands/ping.js';
 import info from '../commands/info.js';
