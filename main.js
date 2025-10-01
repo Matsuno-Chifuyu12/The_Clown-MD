@@ -4,7 +4,7 @@
 
 import connectToWhatsApp from './auth/authHandler.js';
 import handleIncomingMessage from './messages/messageHandler.js';
-import reconnect from './events/reconnection.js';
+import reconnect from './events/reconnect.js';
 import { startBot } from './events/bot.js';
 import { MODE } from './config.js';
 import isValidCode from './utils/validator.js';
