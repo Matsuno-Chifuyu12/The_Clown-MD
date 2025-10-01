@@ -4,7 +4,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import fs from 'fs';
-import * as commands from '../commands';
 import configManager from '../utils/managerConfigs.js';
 import auto from '../commands/auto.js';
 import tag from '../commands/tag.js';
