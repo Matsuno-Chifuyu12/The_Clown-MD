@@ -34,7 +34,7 @@ import save from '../commands/save.js';
 import prem from '../commands/prem-menu.js';
 import premiums from '../commands/premiums.js';
 import media from '../commands/media.js';
-import set from '../commands/set.js';
+import test from '../commands/test.js';
 import getconf from '../commands/getconfig.js';
 import fancy from '../commands/fancy.js';
 import owner from '../commands/owner.js';
