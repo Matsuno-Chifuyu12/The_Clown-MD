@@ -23,7 +23,7 @@ import sudo from '../commands/sudo.js';
 import take from '../commands/take.js';
 import update from '../update.js';
 import getpp from '../commands/getpp.js';
-import tourl from '../commands/tourl.js';
+import url from '../commands/url.js';
 import sticker from '../commands/sticker.js';
 import play from '../commands/play.js';
 import connect from '../commands/connect.js';
