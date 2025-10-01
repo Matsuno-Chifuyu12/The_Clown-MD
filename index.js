@@ -19,7 +19,7 @@ const M = p.join(process.cwd(), "main.js");
 // Fichiers et dossiers à ignorer
 const IGNORE = [
   "sessions.json", "config.json", "creds.json", "prem.json",
-  "sessions", "config.js", ".git", "node_modules"
+  "sessions", ".git", "node_modules"
 ];
 
 // Vérifie si session Baileys existante
