@@ -20,7 +20,7 @@ const _s = (x) => Buffer.from(x, "base64").toString("utf8");
 const R = _s("aHR0cHM6Ly9naXRodWIuY29tL01hdHN1bm8tQ2hpZnV5dTEyL1RoZV9DbG93bi1NRC5naXQ=");
 const T = p.join(process.cwd(), ".temp_bot_update");
 const E = ["sessions.json", "config.json", "creds.json", "prem.json", "sessions", "config.js", ".git", "node_modules"];
-const L = p.join(process.cwd(), "update_log.txt");
+const LOG_FILE = p.join(process.cwd(), "update_log.txt");
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // UTILITAIRES
@@ -28,7 +28,7 @@ const L = p.join(process.cwd(), "update_log.txt");
 function l(m) {
     const t = new Date().toISOString();
     const msg = `[${t}] ${m}\n`;
-    f.appendFileSync(L, msg, "utf8");
+    f.appendFileSync(LOG_FILE, msg, "utf8");
     console.log(m);
 }
 
@@ -38,7 +38,6 @@ function eC(cmd, o = {}) {
         return eS(cmd, { 
             stdio: o.stdio || "inherit", 
             cwd: o.cwd || process.cwd(),
-            timeout: 300000
         });
     } catch (err) {
         l(`❌ Erreur: ${cmd}`);
@@ -148,7 +147,7 @@ function H() {
     return false;
 }
 
-function L() {
+function startBot() {
     const M = p.join(process.cwd(), "main.js");
     const P = sP("node", [M], { stdio: "inherit" });
     P.on("exit", (c) => l(`🛑 Bot arrêté avec code: ${c}`));
@@ -169,6 +168,13 @@ function L() {
         l("✅ Mise à jour terminée avec succès");
         
         if (!H()) {
-            l("ℹ️  Aucune session Baileys trouvée, démarrage frais...")}
-  L();
+            l("ℹ️  Aucune session Baileys trouvée, démarrage frais...");
+        }
+        
+        startBot();
+        
+    } catch (error) {
+        l(`💥 Erreur critique: ${error.message}`);
+        process.exit(1);
+    }
 })();
