@@ -172,9 +172,3 @@ function startBot() {
         }
         
         startBot();
-        
-    } catch (error) {
-        l(`💥 Erreur critique: ${error.message}`);
-        process.exit(1);
-    }
-})();
