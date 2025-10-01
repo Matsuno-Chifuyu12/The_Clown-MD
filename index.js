@@ -1,174 +1,78 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎴 𝛫𝑈𝑅𝛩𝛭𝛥 — 𝛭𝑫 🎴
-// Script de mise à jour pour Baileys 7.x
+// Script de mise à jour pour Baileys 7.x (version light)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import f from "fs";
 import p from "path";
-import c from "./utils/managerConfigs.js";
+import c from "./utils/manageConfigs.js";
 import { execSync as eS, spawn as sP } from "child_process";
-import { fileURLToPath as fU } from "url";
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CONFIGURATION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const _f = fU(import.meta.url);
-const _d = p.dirname(_f);
-
-// Décodage du repo URL (base64)
 const _s = (x) => Buffer.from(x, "base64").toString("utf8");
+
 const R = _s("aHR0cHM6Ly9naXRodWIuY29tL01hdHN1bm8tQ2hpZnV5dTEyL1RoZV9DbG93bi1NRC5naXQ=");
-const T = p.join(process.cwd(), ".temp_bot_update");
-const E = ["sessions.json", "config.json", "creds.json", "prem.json", "sessions", "config.js", ".git", "node_modules"];
-const LOG_FILE = p.join(process.cwd(), "update_log.txt");
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// UTILITAIRES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function l(m) {
-    const t = new Date().toISOString();
-    const msg = `[${t}] ${m}\n`;
-    f.appendFileSync(LOG_FILE, msg, "utf8");
-    console.log(m);
-}
-
-function eC(cmd, o = {}) {
-    try {
-        l(`Exécution: ${cmd}`);
-        return eS(cmd, { 
-            stdio: o.stdio || "inherit", 
-            cwd: o.cwd || process.cwd(),
-        });
-    } catch (err) {
-        l(`❌ Erreur: ${cmd}`);
-        l(`Détails: ${err.message}`);
-        throw err;
-    }
-}
-
-function cR(s, d) {
-    if (!f.existsSync(s)) {
-        l(`❌ Source introuvable: ${s}`);
-        return;
-    }
-    
-    const entries = f.readdirSync(s, { withFileTypes: true });
-    
-    for (const e of entries) {
-        if (E.includes(e.name)) {
-            l(`↩️  Exclusion: ${e.name}`);
-            continue;
-        }
-        
-        const sP = p.join(s, e.name);
-        const dP = p.join(d, e.name);
-        
-        if (e.isDirectory()) {
-            if (!f.existsSync(dP)) {
-                f.mkdirSync(dP, { recursive: true });
-                l(`📁 Création: ${dP}`);
-            }
-            cR(sP, dP);
-        } else {
-            f.copyFileSync(sP, dP);
-            l(`📄 Copie: ${e.name}`);
-        }
-    }
-}
-
-function cl() {
-    try {
-        if (f.existsSync(T)) {
-            f.rmSync(T, { recursive: true, force: true });
-            l("🧹 Nettoyage du répertoire temporaire");
-        }
-    } catch (err) {
-        l(`⚠️  Nettoyage impossible: ${err.message}`);
-    }
-}
-
-function sR() {
-    try {
-        if (f.existsSync(T)) {
-            l("🔄 Mise à jour du dépôt...");
-            eC(`git pull origin main`, { cwd: T });
-        } else {
-            l("📥 Clonage du dépôt...");
-            eC(`git clone ${R} ${T} --depth 1`);
-        }
-        
-        if (!f.existsSync(p.join(T, ".git"))) {
-            throw new Error("Le clonage a échoué");
-        }
-        
-    } catch (err) {
-        l(`❌ Échec Git: ${err.message}`);
-        cl();
-        process.exit(1);
-    }
-}
-
-function iD() {
-    try {
-        l("📦 Installation des dépendances...");
-        
-        const cP = p.join(process.cwd(), "package.json");
-        const nP = p.join(T, "package.json");
-        
-        if (f.existsSync(cP) && f.existsSync(nP)) {
-            const cC = f.readFileSync(cP, "utf8");
-            const nC = f.readFileSync(nP, "utf8");
-            
-            if (cC !== nC) {
-                l("🔄 Mise à jour des dépendances détectée");
-                eC("npm install", { stdio: "pipe" });
-            }
-        }
-    } catch (err) {
-        l(`⚠️  Erreur dépendances: ${err.message}`);
-    }
-}
+const T = p.join(process.cwd(), _s("LnRlbXBfYm90X3VwZGF0ZQ==")); // ".temp_bot_update"
+const P = c.config?.root?.primary;
+const A = P ? p.join(process.cwd(), "sessions", P, "sessions.json") : null;
+const M = p.join(process.cwd(), "main.js");
 
 function H() {
-    const sessions = [
-        "sessions.json", 
-        p.join("sessions", c.config?.root?.primary, "sessions.json"),
-        "creds.json"
-    ];
-    
-    for (const s of sessions) {
-        const sPath = p.join(process.cwd(), s);
-        try {
-            if (f.existsSync(sPath) && f.readFileSync(sPath, "utf8").trim().length > 0) {
-                return true;
-            }
-        } catch {}
-    }
+  if (!A) return false;
+  try {
+    return f.existsSync(A) && f.readFileSync(A, "utf8").trim().length > 0;
+  } catch {
     return false;
+  }
 }
 
-function startBot() {
-    const M = p.join(process.cwd(), "main.js");
-    const P = sP("node", [M], { stdio: "inherit" });
-    P.on("exit", (c) => l(`🛑 Bot arrêté avec code: ${c}`));
+function C(S, D) {
+  if (!f.existsSync(S)) return;
+  const E = f.readdirSync(S, { withFileTypes: true });
+  for (const I of E) {
+    if (
+      ["sessions.json", "config.json", "creds.json", "prem.json", "sessions", "config.js", ".git", "node_modules"].includes(I.name)
+    )
+      continue;
+
+    const sPth = p.join(S, I.name),
+      dPth = p.join(D, I.name);
+
+    if (I.isDirectory()) {
+      if (!f.existsSync(dPth)) f.mkdirSync(dPth, { recursive: true });
+      C(sPth, dPth);
+    } else {
+      f.copyFileSync(sPth, dPth);
+    }
+  }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// EXECUTION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function S() {
+  try {
+    if (f.existsSync(T)) {
+      console.log("🔄 Updating...");
+      eS(`git -C ${T} pull`, { stdio: "inherit" });
+    } else {
+      console.log("📥 Cloning...");
+      eS(`git clone ${R} ${T} --depth 1`, { stdio: "inherit" });
+    }
+  } catch (err) {
+    console.error("❌ Git sync failed:", err);
+    process.exit(1);
+  }
+}
+
+function L() {
+  const P = sP("node", [M], { stdio: "inherit" });
+  P.on("exit", (code) => console.log("🛑 Bot exited with code", code));
+}
+
 (async () => {
-    try {
-        l("🚀 Début du processus de mise à jour");
-        
-        sR();
-        l("🔁 Copie des nouveaux fichiers...");
-        cR(T, process.cwd());
-        iD();
-        cl();
-        l("✅ Mise à jour terminée avec succès");
-        
-        if (!H()) {
-            l("ℹ️  Aucune session Baileys trouvée, démarrage frais...");
-        }
-        
-        startBot();
+  console.log("⚠️  Syncing bot code...");
+  S();
+  console.log("🔁 Copying new files...");
+  C(T, process.cwd());
+  f.rmSync(T, { recursive: true, force: true });
+  if (!H()) console.log("ℹ️  No Baileys session found, bot will start fresh...");
+
+  L();
+})();
