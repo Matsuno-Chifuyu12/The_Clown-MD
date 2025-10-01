@@ -43,25 +43,13 @@ import facebook from '../commands/facebook.js';
 import instagram from '../commands/instagram.js';
 import pinterest from '../commands/pinterest.js';
 import snapchat from '../commands/snapchat.js';
-import antipromote from '../commands/antipromote.js';
-import antidemote from '../commands/antidemote.js';
-import antitag from '../commands/antitag.js';
 import antidevice from '../commands/antidevice.js';
-import antimention from '../commands/antimention.js';
-import antilink from '../commands/antilink.js';
 import antispam from '../commands/antispam.js';
 import antibot from '../commands/antibot.js';
-import antimedia from '../commands/antimedia.js';
-import welcome from '../commands/welcome.js';
-import left from '../commands/left.js';
-import mute from '../commands/mute.js';
+import antimanager '../commands/antimanager.js';
+import antimedia '../commands/antimedia.js';
 import set from '../commands/set.js';
-import unmute from '../commands/unmute.js';
-import invite from '../commands/invite.js';
-import settag from '../commands/settag.js';
-import respons from '../commands/respons.js';
-import tagall from '../commands/tagall.js';
-import tagadmin from '../commands/tagadmin.js';
+
 
 // Cache des données statiques
 export let creator = ["237683614362@s.whatsapp.net"];
