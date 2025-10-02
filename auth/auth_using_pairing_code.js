@@ -2,8 +2,8 @@
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // WhatsApp Bot Connection Module (Pairing Code Optimisé)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
+import pkg from 'baileys';
+const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg ;
 
 let connectionInstance = null;
 let isConnecting = false;
