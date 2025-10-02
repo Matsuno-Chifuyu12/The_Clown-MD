@@ -3,12 +3,30 @@
 // Commandes de mention / TAG — Ton Majordome
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { createWriteStream } from 'fs';
+import { createWriteStream, existsSync, mkdirSync, unlinkSync } from 'fs';
+import path from 'path';
 import pkg from "baileys";
 const { downloadMediaMessage } = pkg;
 import configManager from '../utils/managerConfigs.js';
 
 const BOT_SIGNATURE = '🎩 Votre humble serviteur — 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴 🎩';
+
+// Fonction de conversion audio (version simplifiée)
+async function convertToPTT(inputPath, outputPath) {
+    try {
+        // Pour l'instant, on copie simplement le fichier
+        // Dans une vraie implémentation, vous utiliseriez ffmpeg ou une librairie audio
+        if (existsSync(inputPath)) {
+            const fs = await import('fs');
+            fs.copyFileSync(inputPath, outputPath);
+            return outputPath;
+        }
+        return inputPath;
+    } catch (error) {
+        console.error("Erreur conversion audio:", error);
+        return inputPath;
+    }
+}
 
 export async function tagall(message, client) {
     const jid = message.key.remoteJid;
@@ -37,6 +55,7 @@ ${BOT_SIGNATURE}`.trim();
         await client.sendMessage(jid, { text: tagMessage, mentions: participants });
     } catch (err) {
         console.error("Erreur lors de l'invocation de tous les membres :", err);
+        await client.sendMessage(jid, { text: 'Une malencontreuse erreur a entravé l\'invocation générale.' });
     }
 }
 
@@ -185,6 +204,7 @@ export async function tag(message, client) {
         });
     } catch (err) {
         console.error("Erreur lors de l'invocation générale :", err);
+        await client.sendMessage(jid, { text: 'Une erreur est survenue lors de l\'invocation.' });
     }
 }
 
@@ -208,6 +228,7 @@ export async function settag(message, client) {
         await client.sendMessage(jid, { text: 'Votre tag audio a été élégamment enregistrée. 🎩' });
     } catch (err) {
         console.error("Erreur lors de la définition du tag audio :", err);
+        await client.sendMessage(jid, { text: 'Une erreur est survenue lors de l\'enregistrement du tag audio.' });
     }
 }
 
@@ -232,7 +253,58 @@ export async function tagoption(message, client) {
         }
     } catch (err) {
         console.error("Erreur lors du réglage des options de tag :", err);
+        await client.sendMessage(jid, { text: 'Une erreur est survenue lors du réglage des options.' });
     }
 }
+
+export async function respond(message, client) {
+    const number = client.user.id.split(":")[0];
+    const remoteJid = message.key.remoteJid;
+    const messageBody = message.message?.extendedTextMessage?.text || message.message?.conversation || "";
+
+    if (!configManager.config?.users[number]) return;
+    
+    const tagRespond = configManager.config.users[number]?.response;
+    if (!message.key.fromMe && tagRespond && messageBody.includes(`@${number}`)) {
+        console.log("✅ Tag détecté - réponse audio en cours...");
+        
+        try {
+            const inputAudio = configManager.config.users[number]?.tagAudioPath || "tag.mp3";
+            
+            if (existsSync(inputAudio)) {
+                await client.sendMessage(remoteJid, {
+                    audio: { url: inputAudio },
+                    mimetype: "audio/mpeg",
+                    ptt: true,
+                    contextInfo: {
+                        stanzaId: message.key.id,
+                        participant: message.key.participant || remoteJid,
+                        quotedMessage: message.message
+                    },
+                });
+                console.log("✅ Réponse audio envoyée avec succès");
+            } else {
+                console.log("❌ Fichier audio non trouvé:", inputAudio);
+                await client.sendMessage(remoteJid, {
+                    text: "🎵 *Bip!* Votre mention a été honorée.\n\n" + BOT_SIGNATURE,
+                    contextInfo: {
+                        stanzaId: message.key.id,
+                        participant: message.key.participant || remoteJid,
+                        quotedMessage: message.message
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("❌ Erreur lors de l'envoi de la réponse audio:", error);
+            await client.sendMessage(remoteJid, {
+                text: "❌ Une erreur est survenue lors de la réponse audio.\n\n" + BOT_SIGNATURE
+            });
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EXPORT COMPLET ET CORRECT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export default { tagall, tagadmin, tag, respond, settag, tagoption };
