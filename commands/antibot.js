@@ -2,7 +2,7 @@
 // 🎴 AntiBot Kurona — Détection intelligente & expulsion automatique des bots
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-import {proto} from 'bailey';
+import {proto} from 'baileys';
 import fs from 'fs';
 
 // ----------------------
