@@ -47,7 +47,7 @@ import antidevice from '../commands/antidevice.js';
 import antispam from '../commands/antispam.js';
 import antibot from '../commands/antibot.js';
 import antimanage from '../commands/antimanage.js';
-import antimedia '../commands/antimedia.js';
+import antimedia from '../commands/antimedia.js';
 import set from '../commands/set.js';
 
 
