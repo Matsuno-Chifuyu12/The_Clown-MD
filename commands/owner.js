@@ -4,7 +4,10 @@
 // Commande : owner.js
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { OWNER_NUMBER, OWNER_NAME } from "../config.json" with { type: "json" };
+// ✅ CORRECTION COMPLÈTE :
+import config from "../config.json" with { type: "json" };
+const OWNER_NUMBER = config.bot.owner.number;
+const OWNER_NAME = config.bot.owner.name;
 
 export async function owner(message, client) {
     try {
@@ -29,7 +32,7 @@ END:VCARD`;
 
     } catch (error) {
         console.error("Erreur owner.js:", error);
-        await client.sendMessage(message.key.remoteJid, { text: "❌ Erreur lors de l’envoi du contact propriétaire." });
+        await client.sendMessage(message.key.remoteJid, { text: "❌ Erreur lors de l'envoi du contact propriétaire." });
     }
 }
 
