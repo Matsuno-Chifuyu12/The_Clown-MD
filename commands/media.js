@@ -7,7 +7,7 @@
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
-import { downloadMediaMessage } from "@whiskeysockets/bailey";
+import { downloadMediaMessage } from "baileys";
 
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🖼️ STICKER → PHOTO
