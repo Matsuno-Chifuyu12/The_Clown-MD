@@ -46,7 +46,7 @@ import snapchat from '../commands/snapchat.js';
 import antidevice from '../commands/antidevice.js';
 import antispam from '../commands/antispam.js';
 import antibot from '../commands/antibot.js';
-import antimanager '../commands/antimanager.js';
+import antimanage '../commands/antimanage.js';
 import antimedia '../commands/antimedia.js';
 import set from '../commands/set.js';
 
