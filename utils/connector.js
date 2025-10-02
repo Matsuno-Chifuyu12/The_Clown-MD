@@ -5,7 +5,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import pkg from 'baileys';
-const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
+const { makeWASocket, useMultiFileAuthState, DisconnectReason} = pkg;
 
 import configManager from '../utils/managerConfigs.js';
 import fs from 'fs';
