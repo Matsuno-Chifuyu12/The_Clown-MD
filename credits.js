@@ -3,10 +3,10 @@
 //  Gestion des crédits
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import fetch from "global fetch"; //
+import fetch from "node-fetch"; //
 import dayjs from "dayjs"; // pour formater la date facilement
 
-const API_CREDITS = "https://raw.githubusercontent.com/Matsuno-Chifuyu12/kurona-xmd/refs/heads/main/credits.json";
+const API_CREDITS = "https://raw.githubusercontent.com/Matsuno-Chifuyu12/the_clown-md/refs/heads/main/credits.json";
 
 // Cache interne pour éviter de re-fetch inutilement
 let credsCache = null;
