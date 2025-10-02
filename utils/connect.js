@@ -2,7 +2,8 @@
 // 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des connexions WhatsApp pour Kurona
 
-import { makeWASocket, useMultiFileAuthState, DisconnectReason } from 'baileys';
+import pkg from 'baileys';
+const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg ;
 import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../messages/sender.js';
