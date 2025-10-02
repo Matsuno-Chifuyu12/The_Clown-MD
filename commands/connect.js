@@ -4,7 +4,8 @@
 // Créateur : 🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
+import pkg from 'baileys';
+const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg ;
 import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../messages/sender.js';
