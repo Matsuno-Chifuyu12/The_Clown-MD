@@ -11,10 +11,9 @@ import autoJoin from '../utils/autoJoin.js';
 
 const SESSIONS_FILE = "./sessions.json";
 const sessions = new Map();
-const PAIRING_TIMEOUT = 60000; // 1 min
 const INITIAL_DELAY = 5000;    // 5 sec
 
-// Sauvegarde d’un numéro de session
+// Sauvegarde d'un numéro de session
 function saveSessionNumber(number) {
     try {
         let sessionsList = [];
@@ -31,7 +30,7 @@ function saveSessionNumber(number) {
     }
 }
 
-// Suppression d’une session
+// Suppression d'une session
 function removeSession(number) {
     console.log(`🗑️ Suppression session: ${number} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
 
@@ -55,7 +54,7 @@ function removeSession(number) {
     }
 }
 
-// Démarrage d’une session
+// Démarrage d'une session
 async function startSession(targetNumber, bot, msg) {
     try {
         console.log(`🚀 Démarrage session: ${targetNumber} | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
@@ -105,26 +104,27 @@ async function startSession(targetNumber, bot, msg) {
             }
         });
 
-        // Code d’appariement
+        // Code d'appariement - sans timeout
         setTimeout(async () => {
             if (!state.creds.registered) {
                 try {
                     const code = await sock.requestPairingCode(targetNumber, "kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴");
                     await sender(bot, msg, `🔑 Code d'appariement: \`${code}\`\n📱 Connectez-le à WhatsApp.\n🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`, { parse_mode: "Markdown" });
+                    
+                    // Attente infinie pour l'appariement
+                    const checkPairing = setInterval(async () => {
+                        if (state.creds.registered) {
+                            clearInterval(checkPairing);
+                            console.log(`✅ Appariement réussi: ${targetNumber}`);
+                        }
+                    }, 10000); // Vérifie toutes les 10 secondes
+                    
                 } catch (error) {
                     console.error(`❌ Erreur code pairing: ${targetNumber}`, error.message);
+                    await sender(bot, msg, `❌ Erreur génération code pairing: ${error.message}`);
                 }
             }
         }, INITIAL_DELAY);
-
-        // Timeout si non apparié
-        setTimeout(async () => {
-            if (!state.creds.registered) {
-                console.log(`⏰ Pairing expiré: ${targetNumber}`);
-                await sender(bot, msg, `❌ Pairing expiré pour ${targetNumber}\n🔄 Reconnectez dans 2 minutes. | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
-                removeSession(targetNumber);
-            }
-        }, PAIRING_TIMEOUT);
 
         // Messages entrants
         sock.ev.on("messages.upsert", async (msg) => {
