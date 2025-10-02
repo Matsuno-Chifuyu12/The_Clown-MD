@@ -5,7 +5,7 @@
 
 import configManager from '../utils/manageConfigs.js';
 import fs from "fs";
-import sender from '../utils/sender.js';
+import sender from '../messages/sender.js';
 
 const SESSIONS_FILE = "./sessions.json";
 const sessions = {};
