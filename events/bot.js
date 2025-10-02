@@ -8,7 +8,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import axios from 'axios';
 import { TELEGRAM_BOT_TOKEN } from '../config.js';
 import { messageHandler } from '../events/handler.js';
-import reconnect from '../events/reconnection.js';
+import reconnect from '../events/reconnect.js';
 
 export let bot = null;
 
