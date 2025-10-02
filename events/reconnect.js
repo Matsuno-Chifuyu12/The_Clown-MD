@@ -1,7 +1,6 @@
 // reconnect.js
 // 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des sessions WhatsApp (start, reconnect, remove)
-// Hyper performant • Fluide • Robuste • Design Propre
 
 import pkg from 'baileys';
 const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
