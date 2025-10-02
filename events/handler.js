@@ -10,7 +10,7 @@ import handleCheckJoin from '../utils/checkJoin.js';
 import { isUserInChannel } from '../utils/checkmember.js';
 import sessionCount from '../utils/sessionCount.js';
 import redirect from '../utils/redirect.js';
-import { OWNER_ID, LIMIT, PUB } from '../config.js';
+import { OWNER_ID, LIMIT } from '../config.js'; // ✅ PUB retiré
 import connect from '../utils/connect.js';
 import disconnect from '../utils/disconnect.js';
 import { getCreds } from '../credits.js';
@@ -33,9 +33,10 @@ function loadPremiumData() {
   }
 }
 
+// ✅ FONCTION isPremium CORRIGÉE (sans PUB)
 function isPremium(userId) {
   const data = loadPremiumData();
-  return PUB || data.users.includes(userId.toString());
+  return data.users.includes(userId.toString()); // ✅ Retiré la référence à PUB
 }
 
 function addPremium(userId) {
@@ -180,4 +181,4 @@ export function messageHandler(bot) {
     );
   });
 
-}
+        }
