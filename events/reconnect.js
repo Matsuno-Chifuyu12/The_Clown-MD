@@ -5,7 +5,7 @@
 
 import pkg from 'baileys';
 const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
-import handleIncomingMessage from '../messages/messageHandler.js';
+import { handleIncomingMessage } from '../messages/messageHandler.js'; 
 import configManager from '../utils/managerConfigs.js';
 import fs from 'fs';
 
