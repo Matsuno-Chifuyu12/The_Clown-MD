@@ -4,7 +4,7 @@
 // Creator : 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import sender from "../commands/sender.js";
+import sender from "../messages/sender.js";
 
 /**
  * Supprime un message (global ou local selon permissions)
