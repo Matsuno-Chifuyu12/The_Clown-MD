@@ -5,7 +5,7 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
-import configManager from './utils/managerConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from './messanges/sender.js';
 import handleIncomingMessage from './messages/messageHandler.js';
