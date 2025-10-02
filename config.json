@@ -1,11 +1,9 @@
 {
+  "OWNER_NUMBER": "+237683614362",
+  "OWNER_NAME": "🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴",
   "bot": {
     "name": "🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴",
     "version": "1.0.0",
-    "owner": {
-      "name": "🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴",
-      "number": "+237683614362"
-    },
     "prefix": ".",
     "language": "fr",
     "logging": {
@@ -19,7 +17,7 @@
     "status": {
       "autoSet": true,
       "presence": "online",
-      "activity": "⚡ Kurona-XMD Bot"
+      "activity": "⚡ Kurona-MD Bot"
     }
   },
   "users": {
@@ -46,6 +44,7 @@
   "features": {
     "autoReply": true,
     "antiSpam": false,
+    "antiDevice": false,
     "welcomeMessage": true,
     "goodbyeMessage": true,
     "deleteCommandMessages": false,
