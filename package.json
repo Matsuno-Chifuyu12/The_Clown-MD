@@ -33,7 +33,7 @@
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
     "axios-retry": "^4.5.0",
-    "baileys": "https://github.com/Matsuno-Chifuyu12/kurona_baileys",
+    "baileys": "https://github.com/Matsuno-Chifuyu12/kurona_bail_mod/archive/refs/tags/V1.0.0.tar.gz",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "node-fetch": "^3.3.2",
     "dayjs": "^1.11.10",
