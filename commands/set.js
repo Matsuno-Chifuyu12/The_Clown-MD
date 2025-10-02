@@ -4,7 +4,7 @@
 // Commande : set.js
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import configManager from '../../utils/manageConfigs.js';
+import configManager from '../../utils/managerConfigs.js';
 import bug from '../bug-menu.js';
 
 // Vérif Emoji
