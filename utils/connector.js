@@ -9,7 +9,7 @@ const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
 
 import configManager from '../utils/managerConfigs.js';
 import fs from 'fs';
-import handleIncomingMessage from '../messages/messageHandler.js';
+import {handleIncomingMessage} from '../messages/messageHandler.js';
 import group from '../commands/group.js';
 import antimanage from '../commands/antimanage.js';
 
