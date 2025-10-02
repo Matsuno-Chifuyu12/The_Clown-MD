@@ -8,6 +8,9 @@ export async function react(message, client) {
                 key: message.key
             }
         });
+    } catch (error) {
+        console.error('❌ Erreur réaction:', error.message);
+        // Ne pas bloquer l'exécution en cas d'erreur
     }
 }
 
