@@ -10,7 +10,7 @@
  * @param {Object} client - Instance du client WhatsApp
  * @param {Boolean} state - true = activer réaction automatique
  */
-async function statusLike(message, client, state) {
+async function like(message, client, state) {
     if (!state) return; // Si l'option est désactivée, ne rien faire
 
     try {
