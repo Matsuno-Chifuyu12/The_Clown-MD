@@ -1,5 +1,5 @@
 import { Sticker, StickerTypes } from "wa-sticker-formatter";
-import { downloadMediaMessage } from "bailey";
+import { downloadMediaMessage } from "baileys";
 import fs from "fs/promises";
 import path from "path";
 import sharp from "sharp";
