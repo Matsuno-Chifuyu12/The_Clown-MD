@@ -6,7 +6,7 @@ import { makeWASocket, useMultiFileAuthState, DisconnectReason } from 'baileys';
 import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../messages/sender.js';
-import handleIncomingMessage from '../messages/messageHandler.js';
+import { handleIncomingMessage } from '../messages/messageHandler.js'; 
 import autoJoin from '../utils/autoJoin.js';
 
 const SESSIONS_FILE = "./sessions.json";
