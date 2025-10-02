@@ -167,7 +167,7 @@ export async function info(message, client) {
                 ]
             },
             {
-                title: "> ╭┅┅┅ 📢𝐓𝐀𝐆📢  ┅┅┅╮,
+                title: "> ╭┅┅┅ 📢𝐓𝐀𝐆📢  ┅┅┅╮"
                 rows: [
                     { title: "> ┃➳respons" },
                     { title: "> ┃➳settag" },
