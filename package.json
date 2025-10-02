@@ -36,6 +36,7 @@
     "baileys": "https://github.com/Matsuno-Chifuyu12/kurona_baileys",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "node-fetch": "^3.3.2",
+    "dayjs": "^1.11.10",
     "node-telegram-bot-api": "^0.66.0",
     "uuid": "^11.1.0",
     "wa-sticker-formatter": "^4.4.4",
