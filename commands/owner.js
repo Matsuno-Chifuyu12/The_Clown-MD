@@ -4,7 +4,7 @@
 // Commande : owner.js
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { OWNER_NUMBER, OWNER_NAME } from "../config.json";
+import { OWNER_NUMBER, OWNER_NAME } from "../config.json" with { type: "json" };
 
 export async function owner(message, client) {
     try {
