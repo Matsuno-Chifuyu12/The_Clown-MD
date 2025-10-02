@@ -3,7 +3,7 @@
 // Gestion de la déconnexion des sessions WhatsApp
 // Kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
-import configManager from '../utils/manageConfigs.js';
+import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../messages/sender.js';
 
