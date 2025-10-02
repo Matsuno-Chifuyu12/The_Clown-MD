@@ -7,7 +7,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
-import channelSender from '../commands/channelSender.js';
+import channelSender from './commands/channelSender.js';
 
 // 📌 Infos chemin
 const __filename = fileURLToPath(import.meta.url);
