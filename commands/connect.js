@@ -7,8 +7,8 @@
 import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
 import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
-import sender from './messages/sender.js';
-import handleIncomingMessage from './messages/messageHandler.js';
+import sender from '../messages/sender.js';
+import handleIncomingMessage from '../messages/messageHandler.js';
 
 const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴";
 const CREATOR = "🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴";
