@@ -153,11 +153,20 @@ export async function handleAntiManage(message, client) {
         }
       }
     }
+  } catch (error) {
+    console.error("Erreur handleAntiManage:", error);
+  }
+} // ✅ ACCOLADE FERMANTE AJOUTÉE
+
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 Export
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export default {
-  toggleAntipromote, toggleAntidemote, toggleAntitag, toggleAntigetid, toggleAntimention,
+  toggleAntipromote,
+  toggleAntidemote, 
+  toggleAntitag, 
+  toggleAntigetid, 
+  toggleAntimention,
   toggleAntilink,
   handleGroupUpdate,
   handleAntiManage
