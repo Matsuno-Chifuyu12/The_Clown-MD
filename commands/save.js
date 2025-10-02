@@ -4,7 +4,7 @@
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ //
 
 import { normalizeMessageContent } from '../messages/normalizeContent.js';
-import { downloadMediaMessage } from 'bailey';
+import { downloadMediaMessage } from 'baileys';
 import fs from 'fs';
 import path from 'path';
 
