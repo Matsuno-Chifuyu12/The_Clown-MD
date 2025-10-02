@@ -8,7 +8,7 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import FormData from "form-data";
-import pkg from "bailey";
+import pkg from "baileys";
 import { v4 as uuidv4 } from "uuid";
 
 const { downloadMediaMessage } = pkg;
