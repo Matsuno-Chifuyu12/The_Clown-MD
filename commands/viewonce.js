@@ -4,7 +4,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { normalizeMessageContent } from '../messages/normalizeContent.js';
-import pkg from 'bailey';
+import pkg from 'baileys';
 const { downloadMediaMessage } = pkg;
 import fs from 'fs';
 import path from 'path';
