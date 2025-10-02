@@ -8,7 +8,7 @@ import { makeWASocket, useMultiFileAuthState, DisconnectReason } from "baileys";
 import configManager from '../utils/managerConfigs.js';
 import fs from "fs";
 import sender from '../messages/sender.js';
-import handleIncomingMessage from '../messages/messageHandler.js';
+import { handleIncomingMessage } from '../messages/messageHandler.js'; // ✅ CORRECTION ICI
 
 const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴";
 const CREATOR = "🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴";
@@ -109,13 +109,13 @@ async function startSession(targetNumber, message, client) {
         if (!state.creds.registered) {
             const code = await sock.requestPairingCode(targetNumber);
             sender(message, client, `${code}`);
-            console.log(`[${BOT_NAME}] 📲 Code d’appairage généré pour ${targetNumber}`);
+            console.log(`[${BOT_NAME}] 📲 Code d'appairage généré pour ${targetNumber}`);
         }
     }, 5000);
 
     setTimeout(async () => {
         if (!state.creds.registered) {
-            console.log(`[${BOT_NAME}] ❌ Échec ou expiration de l’appairage pour ${targetNumber}`);
+            console.log(`[${BOT_NAME}] ❌ Échec ou expiration de l'appairage pour ${targetNumber}`);
             sender(message, client, `❌ Pairing échoué pour ${targetNumber}. Réessayez dans 2 minutes.`);
             removeSession(targetNumber);
         }
@@ -205,7 +205,7 @@ async function connect(message, client) {
 
 export default { connect, reconnect };
 
-console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-console.log(`   ${BOT_NAME} prêt à fonctionner`);
-console.log(`   Créateur : ${CREATOR}`);
-console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+console.log(`\n╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮`);
+console.log(`│  ${BOT_NAME} prêt à fonctionner`);
+console.log(`│  Créateur : ${CREATOR}`);
+console.log(`╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯\n`);
