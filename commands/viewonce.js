@@ -3,7 +3,7 @@
 // Commande : Révélation des Médias Éphémères
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { normalizeMessageContent } from '../utils/normalizeContent.js';
+import { normalizeMessageContent } from '../messages/normalizeContent.js';
 import pkg from 'bailey';
 const { downloadMediaMessage } = pkg;
 import fs from 'fs';
