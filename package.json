@@ -33,7 +33,7 @@
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
 "dependencies": {
   "axios-retry": "^4.5.0",
-  "baileys": "npm:@whiskeysockets/baileys@^6.5.0",
+  "baileys": "github:whiskeysockets/baileys",
   "@ffmpeg-installer/ffmpeg": "^1.1.0",
   "node-fetch": "^3.3.2",
   "dayjs": "^1.11.10",
