@@ -1,6 +1,5 @@
 // managerConfigs.js
 // 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
-// Gestion centralisée et optimisée de la configuration
 // Kurona 🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
 
 import fs from "fs";
@@ -28,7 +27,7 @@ function loadConfig() {
     }
 }
 
-// Sauvegarde robuste et rapide de la configuration
+// Sauvegarde de la configuration
 function saveConfig() {
     try {
         fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
@@ -38,7 +37,6 @@ function saveConfig() {
     }
 }
 
-// Export unifié
 export default {
     config,
     save: saveConfig
