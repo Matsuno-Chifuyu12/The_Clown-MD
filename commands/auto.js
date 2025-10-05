@@ -1,9 +1,10 @@
 import configManager from '../utils/managerConfigs.js';
 
-// Cache utilisateur
+// Cache et gestion des timeouts
 const userNumberCache = new Map();
+const timeoutHandlers = new Map();
 
-// Obtenir le numéro de l'utilisateur
+// Récupère le numéro de l'utilisateur depuis le client
 function getUserNumber(client) {
     if (!client?.user?.id) return null;
     const clientId = client.user.id;
@@ -13,20 +14,18 @@ function getUserNumber(client) {
     return number;
 }
 
-// Mise à jour de présence sécurisée
+// Mise à jour de présence sécurisée (évite les crashs silencieux)
 async function updatePresenceSafely(client, presence, remoteJid) {
     try {
         await client.sendPresenceUpdate(presence, remoteJid);
         return true;
     } catch (error) {
-        console.error("Erreur présence (" + presence + "):", error.message);
+        console.error(`Erreur lors de la mise à jour de présence (${presence}):`, error.message);
         return false;
     }
 }
 
-// Timeout pour annuler après x secondes
-const timeoutHandlers = new Map();
-
+// Nettoyer un ancien timeout s’il existe
 function clearExistingTimeout(remoteJid) {
     if (timeoutHandlers.has(remoteJid)) {
         clearTimeout(timeoutHandlers.get(remoteJid));
@@ -34,38 +33,57 @@ function clearExistingTimeout(remoteJid) {
     }
 }
 
-// Fonctions de base pour auto.js
-export function respons(msg, sock) {
-    // Fonction de réponse automatique
-    console.log("Auto response feature");
+// Fonction : auto-enregistrement (micro)
+export async function autorecord(message, client) {
+    if (!message?.key?.remoteJid || !client) return;
+
+    const remoteJid = message.key.remoteJid;
+    const number = getUserNumber(client);
+    if (!number) return;
+
+    const state = configManager.config?.users[number]?.record;
+    if (!state) return;
+
+    clearExistingTimeout(remoteJid);
+
+    const success = await updatePresenceSafely(client, 'recording', remoteJid);
+    if (success) {
+        const timeoutId = setTimeout(async () => {
+            await updatePresenceSafely(client, 'available', remoteJid);
+            timeoutHandlers.delete(remoteJid);
+        }, 5000);
+        timeoutHandlers.set(remoteJid, timeoutId);
+    }
 }
 
-export function autotype(msg, sock) {
-    if (!msg?.key?.remoteJid || !sock) return;
-    const remoteJid = msg.key.remoteJid;
-    const number = getUserNumber(sock);
+// Fonction : auto-typing (écriture)
+export async function autotype(message, client) {
+    if (!message?.key?.remoteJid || !client) return;
+
+    const remoteJid = message.key.remoteJid;
+    const number = getUserNumber(client);
     if (!number) return;
 
     const state = configManager.config?.users[number]?.type;
     if (!state) return;
 
     clearExistingTimeout(remoteJid);
-    updatePresenceSafely(sock, 'composing', remoteJid).then(success => {
-        if (success) {
-            const timeoutId = setTimeout(async () => {
-                await updatePresenceSafely(sock, 'available', remoteJid);
-                timeoutHandlers.delete(remoteJid);
-            }, 5000);
-            timeoutHandlers.set(remoteJid, timeoutId);
-        }
-    });
+
+    const success = await updatePresenceSafely(client, 'composing', remoteJid);
+    if (success) {
+        const timeoutId = setTimeout(async () => {
+            await updatePresenceSafely(client, 'available', remoteJid);
+            timeoutHandlers.delete(remoteJid);
+        }, 5000);
+        timeoutHandlers.set(remoteJid, timeoutId);
+    }
 }
 
-// Nettoyage complet
+// Nettoyage global (appelé lors du restart ou du stop du bot)
 export function cleanupPresenceTimers() {
     for (const timeoutId of timeoutHandlers.values()) clearTimeout(timeoutId);
     timeoutHandlers.clear();
     userNumberCache.clear();
 }
 
-export default { respons, autotype, cleanupPresenceTimers };
+export default { autorecord, autotype, cleanupPresenceTimers };
