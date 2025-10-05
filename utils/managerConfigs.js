@@ -13,8 +13,9 @@ let config = loadConfig();
 // Chargement optimisé de la configuration
 function loadConfig() {
     try {
-        if (fs.existsSync(CONFIG_FILE)) {
-            const data = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf-8"));
+        if (fs.existsSync(configPath)) {
+    try {
+        config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
             console.log("✅ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Configuration chargée avec succès.");
             return data;
         } else {
@@ -30,7 +31,7 @@ function loadConfig() {
 // Sauvegarde de la configuration
 function saveConfig() {
     try {
-        fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
         console.log("💾 [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Configuration sauvegardée avec succès.");
     } catch (error) {
         console.error("❌ [🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴] Échec de la sauvegarde de la configuration:", error.message);
