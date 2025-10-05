@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node main.js",
     "restart": "rm -r auth_info_baileys || node index.js",
     "build": "npm install"
   },
@@ -33,7 +33,7 @@
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
 "dependencies": {
   "axios-retry": "^4.5.0",
-  "baileys": "github:whiskeysockets/baileys",
+  "baileys": "npm:baileys@latest",
   "@ffmpeg-installer/ffmpeg": "^1.1.0",
   "node-fetch": "^3.3.2",
   "dayjs": "^1.11.10",
