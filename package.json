@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node main.js",
+    "start": "node index.js",
     "restart": "rm -r auth_info_baileys || node index.js",
     "build": "npm install"
   },
@@ -31,17 +31,17 @@
     "url": "https://github.com/Matsuno-Chifuyu12/the_clown-md/issues"
   },
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
-"dependencies": {
-  "axios-retry": "^4.5.0",
-  "baileys": "npm:baileys@latest",
-  "@ffmpeg-installer/ffmpeg": "^1.1.0",
-  "node-fetch": "^3.3.2",
-  "dayjs": "^1.11.10",
-  "node-telegram-bot-api": "^0.66.0",
-  "uuid": "^11.1.0",
-  "wa-sticker-formatter": "^4.4.4",
-  "lru-cache": "^11.2.2"
-},
+  "dependencies": {
+    "baileys": "npm:@whiskeysockets/baileys@latest",
+    "axios-retry": "^4.5.0",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "node-fetch": "^3.3.2",
+    "dayjs": "^1.11.10",
+    "node-telegram-bot-api": "^0.66.0",
+    "uuid": "^11.1.0",
+    "wa-sticker-formatter": "^4.4.4",
+    "lru-cache": "^11.2.2"
+  },
   "devDependencies": {
     "ts-jest": "^29.1.1"
   },
