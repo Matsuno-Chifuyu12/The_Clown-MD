@@ -14,6 +14,17 @@ import group from '../commands/group.js';
 import antimanage from '../commands/antimanage.js';
 import autoJoin from '../utils/autoJoin.js';
 
+/* -------------------------
+Test diagnostic 
+ ------------------------- */
+console.log('=== DIAGNOSTIC ===');
+console.log('Baileys package:', pkg);
+console.log('useMultiFileAuthState type:', typeof useMultiFileAuthState);
+console.log('makeWASocket type:', typeof makeWASocket);
+console.log('DisconnectReason:', DisconnectReason);
+console.log('=== FIN DIAGNOSTIC ===');
+
+
 const SESSIONS_FILE = 'sessions.json';
 const sessions = new Map();
 const BOT_NAME = '🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴';
