@@ -24,7 +24,7 @@ const SESSION_FILE = PRIMARY_SESSION
 
 const PROTECTED_ASSETS = [
     "sessions.json", "config.json", "creds.json", "prem.json",
-    "sessions", "config.js", "assets", "lib", "database",
+    "sessions", "config.js", "assets", "antidevice.json", "antidevice_devices.json",
     ".git", "node_modules",  "temp"
 ];
 
