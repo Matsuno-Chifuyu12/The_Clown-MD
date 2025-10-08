@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
-    "baileys": "https://github.com/Danscot/senku_bail_mod/archive/refs/tags/V1.5.0.tar.gz",
+    "bailey": "https://github.com/Danscot/senku_bail_mod/archive/refs/tags/V1.5.0.tar.gz",
     "axios-retry": "^4.5.0",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "node-fetch": "^3.3.2",
@@ -47,5 +47,9 @@
   },
   "engines": {
     "node": ">=20.x"
+  },
+
+  "imports": {
+    "baileys": "bailey"
   }
 }
