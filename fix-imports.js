@@ -18,16 +18,10 @@ function scanAndFixFiles(dir) {
         if (content.includes("from 'baileys'") || content.includes('from "baileys"')) {
           const oldContent = content;
           
-          // Pattern 1: import { x, y } from 'baileys'
+          // Pattern: import { x, y } from 'baileys'
           content = content.replace(
             /import\s*{([^}]+)}\s*from\s*['"]baileys['"]/g,
-            'import pkg from \'baileys\';\nconst { $1 } = pkg;'
-          );
-          
-          // Pattern 2: import x from 'baileys'
-          content = content.replace(
-            /import\s+(\w+)\s+from\s*['"]baileys['"]/g,
-            'import $1 from \'baileys\';'
+            'import pkg from \'@whiskeysockets/baileys\';\nconst { $1 } = pkg;'
           );
           
           if (content !== oldContent) {
@@ -43,4 +37,4 @@ function scanAndFixFiles(dir) {
 }
 
 scanAndFixFiles('.');
-console.log('🎯 All imports fixed!');
+console.log('🎯 All baileys imports fixed!');
