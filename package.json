@@ -8,8 +8,8 @@
     "start": "node index.js",
     "restart": "rm -rf auth_info_baileys && node index.js",
     "build": "npm install",
-    "postinstall": "mkdir -p node_modules/baileys && echo 'export * from \"@whiskeysockets/baileys\"; export { default } from \"@whiskeysockets/baileys\";' > node_modules/baileys/index.js",
-    "fix-baileys": "mkdir -p node_modules/baileys && echo 'export * from \"@whiskeysockets/baileys\"; export { default } from \"@whiskeysockets/baileys\";' > node_modules/baileys/index.js"
+    "fix-imports": "node fix-imports.js",
+    "postinstall": "npm run fix-imports"
   },
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "node": ">=20.x"
   },
   "imports": {
-    "baileys": "./node_modules/@whiskeysockets/baileys/index.js"
+    "baileys": {
+      "default": "@whiskeysockets/baileys"
+    }
   }
-}
