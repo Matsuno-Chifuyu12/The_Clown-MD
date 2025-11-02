@@ -1,12 +1,12 @@
 {
-  "name": "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴",
+  "name": "kurona-md",
   "version": "1.0.0",
   "description": "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴 | A multi-device WhatsApp & Telegram bot, designed for management, media and group. A versatile all-in-one digital companion, built with precision and performance. Built on an unofficial WhatsApp API, inspired by the Whiskeysockets/Baileys architecture, exclusive 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑩𝛥𝑰𝑳𝑺🎴",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "restart": "rm -r auth_info_baileys || node index.js",
+    "restart": "rm -rf auth_info_baileys && node index.js",
     "build": "npm install"
   },
   "repository": {
@@ -25,31 +25,30 @@
     "anti-management",
     "media-downloader"
   ],
-  "author": "🎴 𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴",
+  "author": "🎴 𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥 🎴",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Matsuno-Chifuyu12/the_clown-md/issues"
   },
   "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
-    "sharp": "^0.32.0",
     "@whiskeysockets/baileys": "^6.7.20",
-    "axios-retry": "^4.5.0",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "node-fetch": "^3.3.2",
+    "axios-retry": "^4.5.0",
     "dayjs": "^1.11.10",
+    "lru-cache": "^11.2.2",
+    "node-fetch": "^3.3.2",
     "node-telegram-bot-api": "^0.66.0",
+    "sharp": "^0.32.0",
     "uuid": "^11.1.0",
-    "wa-sticker-formatter": "^4.4.4",
-    "lru-cache": "^11.2.2"
+    "wa-sticker-formatter": "^4.4.4"
   },
   "devDependencies": {
     "ts-jest": "^29.1.1"
   },
   "engines": {
-    "node": ">=20.x"
+    "node": ">=20.0.0"
   },
-
   "imports": {
     "baileys": "@whiskeysockets/baileys"
   }
