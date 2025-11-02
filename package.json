@@ -9,7 +9,8 @@
     "restart": "rm -rf auth_info_baileys && node index.js",
     "build": "npm install",
     "fix-imports": "node fix-imports.js",
-    "postinstall": "npm run fix-imports"
+    "postinstall": "npm run fix-imports",
+    "create-alias": "mkdir -p node_modules/baileys && echo 'import baileys from \"@whiskeysockets/baileys\"; export default baileys; export * from \"@whiskeysockets/baileys\";' > node_modules/baileys/index.js"
   },
   "repository": {
     "type": "git",
@@ -52,7 +53,6 @@
     "node": ">=20.x"
   },
   "imports": {
-    "baileys": {
-      "default": "@whiskeysockets/baileys"
-    }
+    "baileys": "./baileys-wrapper.js"
   }
+}
