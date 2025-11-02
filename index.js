@@ -1,6 +1,6 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴 
-// index.js 
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
+// Système de Mise à Jour Automatique
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import fs from "fs";
@@ -8,104 +8,173 @@ import path from "path";
 import { execSync, spawn } from "child_process";
 import managerConfigs from "./utils/managerConfigs.js";
 
-const decode = (x) => Buffer.from(x, "base64").toString("utf8");
+// ─────────────────────────────────────────────
+// 🧠 CONFIGURATION
+// ─────────────────────────────────────────────
+
+const decode = (encoded) => Buffer.from(encoded, "base64").toString("utf8");
 
 const REPO_SOURCE = decode("aHR0cHM6Ly9naXRodWIuY29tL01hdHN1bm8tQ2hpZnV5dTEyL1RoZV9DbG93bi1NRC5naXQ=");
 const TEMP_DIR = path.join(process.cwd(), ".kuro_md_update");
 const BOT_MAIN = path.join(process.cwd(), "main.js");
-
 const PRIMARY_SESSION = managerConfigs.config?.root?.primary;
 const SESSION_FILE = PRIMARY_SESSION
-  ? path.join(process.cwd(), "sessions", PRIMARY_SESSION, "sessions.json")
-  : null;
+? path.join(process.cwd(), "sessions", PRIMARY_SESSION, "sessions.json")
+: null;
 
-// ✅ Liste des fichiers sensibles (protégés seulement s’ils existent déjà)
+// LISTE MINIMALISTE POUR BON FONCTIONNEMENT
 const PROTECTED_ASSETS = [
-  "sessions.json", "config.json", "creds.json", "prem.json",
-  "sessions", "config.js", ".git", "node_modules"
+    "sessions.json", "config.json", "creds.json", "prem.json",
+    "sessions", ".git"
 ];
 
-// 🔍 Vérifie si la session existe déjà
+// ─────────────────────────────────────────────
+// 🔍 VÉRIFICATEUR DE SESSION BAILEYS
+// ─────────────────────────────────────────────
+
 function verifierSessionActive() {
-  if (!SESSION_FILE) return false;
-  try {
-    return fs.existsSync(SESSION_FILE) && fs.readFileSync(SESSION_FILE, "utf8").trim().length > 10;
-  } catch {
-    return false;
-  }
+if (!SESSION_FILE) return false;
+try {
+return fs.existsSync(SESSION_FILE) &&
+fs.readFileSync(SESSION_FILE, "utf8").trim().length > 10;
+} catch {
+return false;
+}
 }
 
-// 📦 Synchronisation du dépôt Git
+// ─────────────────────────────────────────────
+// 📦 GESTIONNAIRE DE MISE À JOUR
+// ─────────────────────────────────────────────
+
 function synchroniserDepotSource() {
-  console.log("🔄 Synchronisation avec le dépôt KURO-MD...");
-  try {
-    if (fs.existsSync(TEMP_DIR)) {
-      execSync(`git -C ${TEMP_DIR} pull --rebase`, { stdio: "pipe", timeout: 60000 });
-    } else {
-      execSync(`git clone ${REPO_SOURCE} ${TEMP_DIR} --depth=1 --branch=main`, { stdio: "pipe" });
-    }
-    console.log("✅ Synchronisation réussie.");
-  } catch (e) {
-    console.error("❌ Erreur Git:", e.message);
-    process.exit(1);
-  }
+console.log("🔄 Connexion au dépôt source 𝛫𝑈𝑅𝛩𝛮𝛥...");
+
+try {  
+    if (fs.existsSync(TEMP_DIR)) {  
+        console.log("📡 Récupération des dernières mises à jour...");  
+        execSync(`git -C ${TEMP_DIR} pull --rebase`, {   
+            stdio: 'pipe',  
+            timeout: 60000   
+        });  
+    } else {  
+        console.log("⬇️  Téléchargement de la version la plus récente...");  
+        execSync(`git clone ${REPO_SOURCE} ${TEMP_DIR} --depth=1 --branch=main`, {  
+            stdio: 'pipe',  
+            timeout: 120000  
+        });  
+    }  
+    console.log("✅ Synchronisation terminée avec succès");  
+} catch (erreur) {  
+    console.error("🚨 Échec de la synchronisation:", erreur.message);  
+    process.exit(1);  
 }
 
-// 🗂️ Migration contrôlée (protège les fichiers existants seulement)
+}
+
+// ─────────────────────────────────────────────
+// 🗂️  MIGRATION DES FICHIERS
+// ─────────────────────────────────────────────
+
 function migrerFichiers(source, destination) {
-  if (!fs.existsSync(source)) return;
-
-  const elements = fs.readdirSync(source, { withFileTypes: true });
-
-  for (const element of elements) {
-    const src = path.join(source, element.name);
-    const dest = path.join(destination, element.name);
-
-    // ⚙️ Si le fichier est dans la liste protégée mais n’existe pas encore → on le copie quand même
-    if (PROTECTED_ASSETS.includes(element.name) && fs.existsSync(dest)) {
-      console.log(`🛡️ Préservé : ${element.name}`);
-      continue;
-    }
-
-    if (element.isDirectory()) {
-      if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
-      migrerFichiers(src, dest);
-    } else {
-      fs.copyFileSync(src, dest);
-      console.log(`📄 Copié : ${element.name}`);
-    }
-  }
+if (!fs.existsSync(source)) {
+console.warn("⚠️  Source de migration introuvable");
+return;
 }
 
-// 🧹 Nettoyage des fichiers temporaires
-function nettoyer() {
-  try {
-    if (fs.existsSync(TEMP_DIR)) {
-      fs.rmSync(TEMP_DIR, { recursive: true, force: true });
-      console.log("🧹 Nettoyage terminé.");
-    }
-  } catch (e) {
-    console.warn("⚠️ Nettoyage partiel:", e.message);
-  }
+const elements = fs.readdirSync(source, { withFileTypes: true });  
+let fichiersMigres = 0;  
+let dossiersMigres = 0;  
+
+for (const element of elements) {  
+    if (PROTECTED_ASSETS.includes(element.name)) {  
+        console.log(`🎴 Protection: ${element.name}`);  
+        continue;  
+    }  
+
+    const cheminSource = path.join(source, element.name);  
+    const cheminDestination = path.join(destination, element.name);  
+
+    if (element.isDirectory()) {  
+        if (!fs.existsSync(cheminDestination)) {  
+            fs.mkdirSync(cheminDestination, { recursive: true });  
+            dossiersMigres++;  
+        }  
+        migrerFichiers(cheminSource, cheminDestination);  
+    } else {  
+        try {  
+            fs.copyFileSync(cheminSource, cheminDestination);  
+            fichiersMigres++;  
+            console.log(`📄 Migré: ${element.name}`);  
+        } catch (erreur) {  
+            console.warn(`⚠️  Impossible de migrer: ${element.name}`, erreur.message);  
+        }  
+    }  
+}  
+
+console.log(`📤 Migration: ${fichiersMigres} fichiers, ${dossiersMigres} dossiers`);
+
 }
 
-// 🚀 Lancement du bot
-function lancerBot() {
-  console.log("🚀 Lancement de KURO-MD...");
-  const p = spawn("node", [BOT_MAIN], { stdio: "inherit", env: { ...process.env, KURO_MD_UPDATED: "true" } });
-  p.on("exit", (code) => console.log(`🛑 Bot terminé (code ${code})`));
-  p.on("error", (e) => console.error("💥 Erreur de lancement:", e));
+// ─────────────────────────────────────────────
+// 🚀 LANCEUR
+// ─────────────────────────────────────────────
+
+function lancerBotKuroMD() {
+console.log("🎴 Initialisation 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫...");
+
+const processus = spawn("node", [BOT_MAIN], {   
+    stdio: "inherit",  
+    env: { ...process.env, KURO_MD_UPDATED: "true" }  
+});  
+
+processus.on("exit", (code) => {  
+    console.log(`🛑 Session 𝛫𝑈𝑅𝛩𝛮𝛥 terminée (code: ${code})`);  
+});  
+
+processus.on("error", (erreur) => {  
+    console.error("💥 Erreur de lancement:", erreur);  
+});
+
 }
 
-// ⚡ Point d'entrée principal
+// ─────────────────────────────────────────────
+// 🧹 NETTOYAGE
+// ─────────────────────────────────────────────
+
+function nettoyerEnvironnement() {
+try {
+if (fs.existsSync(TEMP_DIR)) {
+fs.rmSync(TEMP_DIR, { recursive: true, force: true });
+console.log("🧹 Nettoyage des fichiers temporaires");
+}
+} catch (erreur) {
+console.warn("⚠️  Nettoyage partiel:", erreur.message);
+}
+}
+
+// ─────────────────────────────────────────────
+// ⚡ POINT D'ENTRÉE PRINCIPAL
+// ─────────────────────────────────────────────
+
 (async () => {
-  console.log("🎴 DÉMARRAGE DU SYSTÈME DE MISE À JOUR KURO-MD 🎴");
-  synchroniserDepotSource();
-  migrerFichiers(TEMP_DIR, process.cwd());
-  nettoyer();
+console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮");
+console.log("│   🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 MISE À JOUR");
+console.log("╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
 
-  if (!verifierSessionActive()) console.log("💫 Démarrage frais...");
-  else console.log("🔗 Session existante détectée.");
+synchroniserDepotSource();  
 
-  lancerBot();
+console.log("\n🔁 Application des mises à jour...");  
+migrerFichiers(TEMP_DIR, process.cwd());  
+
+nettoyerEnvironnement();  
+
+if (!verifierSessionActive()) {  
+    console.log("💫 Aucune session active, démarrage frais...");  
+} else {  
+    console.log("🔗 Session existante détectée, reprise...");  
+}  
+
+console.log("\n🚀 Activation de 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫...");  
+lancerBotKuroMD();
+
 })();
