@@ -1,212 +1,195 @@
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// sessionManager.js  –  version corrigée & complète
 // 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestionnaire de sessions WhatsApp Multi-Device
 // Créateur : 🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import pkg from 'baileys';
-const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg ;
-import configManager from '../utils/managerConfigs.js';
-import fs from "fs";
+import fs from 'fs';
 import sender from '../messages/sender.js';
-import { handleIncomingMessage } from '../messages/messageHandler.js'; // ✅ CORRECTION ICI
+import { handleIncomingMessage } from '../messages/messageHandler.js';
 
-const BOT_NAME = "🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴";
-const CREATOR = "🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴";
+// ── 1. Import sécurisé de baileys ---------------------------------------
+let pkg;
+try {
+  pkg = await import('baileys');
+} catch (e) {
+  console.error('❌  Le module « baileys » est introuvable. Lancez « npm install ».');
+  process.exit(1);
+}
+const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
 
-const SESSIONS_FILE = "./sessions.json";
-const sessions = {};
+import configManager from '../utils/managerConfigs.js';
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Sauvegarde et suppression des sessions
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── 2. Constantes & variables -------------------------------------------
+const BOT_NAME  = '🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴';
+const CREATOR   = '🎴𝑫𝛯𝑽 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴';
+const SESSIONS_FILE = './sessions.json';
+const sessions = {}; // sock by number
 
+// ── 3. Persistances ------------------------------------------------------
 function saveSessionNumber(number) {
-    let sessionsList = [];
-
-    if (fs.existsSync(SESSIONS_FILE)) {
-        try {
-            const data = JSON.parse(fs.readFileSync(SESSIONS_FILE));
-            sessionsList = Array.isArray(data.sessions) ? data.sessions : [];
-        } catch (err) {
-            console.error(`[${BOT_NAME}] ⚠️ Erreur lecture sessions:`, err);
-            sessionsList = [];
-        }
+  let list = [];
+  if (fs.existsSync(SESSIONS_FILE)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
+      list = Array.isArray(data.sessions) ? data.sessions : [];
+    } catch (e) {
+      console.warn(`[${BOT_NAME}] ⚠️ Erreur lecture sessions :`, e.message);
     }
-
-    if (!sessionsList.includes(number)) {
-        sessionsList.push(number);
-        fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: sessionsList }, null, 2));
-        console.log(`[${BOT_NAME}] ✅ Session sauvegardée pour ${number}`);
-    }
+  }
+  if (!list.includes(number)) {
+    list.push(number);
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: list }, null, 2));
+    console.log(`[${BOT_NAME}] ✅ Session sauvegardée : ${number}`);
+  }
 }
 
 function removeSession(number) {
-    console.log(`[${BOT_NAME}] ❌ Suppression de la session ${number}...`);
-
-    if (fs.existsSync(SESSIONS_FILE)) {
-        let sessionsList = [];
-        try {
-            const data = JSON.parse(fs.readFileSync(SESSIONS_FILE));
-            sessionsList = Array.isArray(data.sessions) ? data.sessions : [];
-        } catch (err) {
-            console.error(`[${BOT_NAME}] ⚠️ Erreur lecture sessions:`, err);
-            sessionsList = [];
-        }
-
-        sessionsList = sessionsList.filter(num => num !== number);
-        fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: sessionsList }, null, 2));
-    }
-
-    const sessionPath = `./sessions/${number}`;
-    if (fs.existsSync(sessionPath)) {
-        fs.rmSync(sessionPath, { recursive: true, force: true });
-    }
-
-    delete sessions[number];
-    console.log(`[${BOT_NAME}] ✅ Session ${number} supprimée avec succès.`);
+  console.log(`[${BOT_NAME}] ❌ Suppression session ${number}…`);
+  // Fichier
+  if (fs.existsSync(SESSIONS_FILE)) {
+    let list = [];
+    try {
+      list = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8')).sessions || [];
+    } catch {}
+    list = list.filter(n => n !== number);
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: list }, null, 2));
+  }
+  // Dossier auth
+  const dir = `./sessions/${number}`;
+  if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
+  // Mémoire
+  delete sessions[number];
+  console.log(`[${BOT_NAME}] ✅ Session ${number} supprimée.`);
 }
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Démarrage d'une session
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+// ── 4. Démarrage / création d’une session --------------------------------
 async function startSession(targetNumber, message, client) {
-    console.log(`[${BOT_NAME}] 🚀 Démarrage de la session pour ${targetNumber}`);
+  console.log(`[${BOT_NAME}] 🚀 Démarrage session ${targetNumber}`);
 
-    const sessionPath = `./sessions/${targetNumber}`;
-    if (!fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true });
+  const sessionDir = `./sessions/${targetNumber}`;
+  if (!fs.existsSync(sessionDir)) fs.mkdirSync(sessionDir, { recursive: true });
 
-    const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
+  const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
 
-    const sock = makeWASocket({
-        auth: state,
-        printQRInTerminal: false,
-        syncFullHistory: false,
-    });
+  const sock = makeWASocket({
+    auth: state,
+    printQRInTerminal: false,
+    syncFullHistory: false,
+    markOnlineOnConnect: false
+  });
 
-    sock.ev.on('creds.update', saveCreds);
+  sock.ev.on('creds.update', saveCreds);
 
-    sock.ev.on('connection.update', async (update) => {
-        const { connection, lastDisconnect } = update;
-
-        if (connection === 'close') {
-            console.log(`[${BOT_NAME}] 🔌 Session fermée pour ${targetNumber}`);
-
-            const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-            if (shouldReconnect) {
-                console.log(`[${BOT_NAME}] 🔄 Tentative de reconnexion à ${targetNumber}...`);
-                await startSession(targetNumber, message, client);
-            } else {
-                console.log(`[${BOT_NAME}] ❌ Déconnexion détectée, suppression de la session ${targetNumber}`);
-                removeSession(targetNumber);
-            }
-        } else if (connection === 'open') {
-            console.log(`[${BOT_NAME}] ✅ Session active pour ${targetNumber}`);
-        }
-    });
-
-    setTimeout(async () => {
-        if (!state.creds.registered) {
-            const code = await sock.requestPairingCode(targetNumber);
-            sender(message, client, `${code}`);
-            console.log(`[${BOT_NAME}] 📲 Code d'appairage généré pour ${targetNumber}`);
-        }
-    }, 5000);
-
-    setTimeout(async () => {
-        if (!state.creds.registered) {
-            console.log(`[${BOT_NAME}] ❌ Échec ou expiration de l'appairage pour ${targetNumber}`);
-            sender(message, client, `❌ Pairing échoué pour ${targetNumber}. Réessayez dans 2 minutes.`);
-            removeSession(targetNumber);
-        }
-    }, 60000);
-
-    sock.ev.on('messages.upsert', async (msg) => handleIncomingMessage(msg, sock));
-    sock.ev.on('creds.update', saveCreds);
-
-    console.log(`[${BOT_NAME}] ✅ Session établie pour ${targetNumber}`);
-
-    sessions[targetNumber] = sock;
-    saveSessionNumber(targetNumber);
-
-    // Config par défaut
-    configManager.config.users[`${targetNumber}`] = {
-        sudoList: [],
-        tagAudioPath: "tag.mp3",
-        antilink: false,
-        response: true,
-        autoreact: false,
-        prefix: ".",
-        reaction: "🌹",
-        welcome: false,
-        record: false,
-        type: false
-    };
-
-    configManager.save();
-    return sock;
-}
-
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Reconnexion automatique
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-async function reconnect(client) {
-    if (!fs.existsSync(SESSIONS_FILE)) return;
-
-    const data = JSON.parse(fs.readFileSync(SESSIONS_FILE));
-    const sessionNumbers = Array.isArray(data.sessions) ? data.sessions : [];
-
-    for (const number of sessionNumbers) {
-        console.log(`[${BOT_NAME}] 🔄 Reconnexion session: ${number}`);
-        try {
-            await startSession(number, null, client);
-        } catch (error) {
-            console.error(`[${BOT_NAME}] ❌ Erreur reconnexion ${number}:`, error);
-            removeSession(number);
-        }
-    }
-}
-
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Connexion manuelle
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-async function connect(message, client) {
-    let targetNumber;
-
-    if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
-        targetNumber = message.message.extendedTextMessage.contextInfo.participant;
-    } else {
-        const messageBody = message.message?.extendedTextMessage?.text || message.message?.conversation || '';
-        const parts = messageBody.split(/\s+/);
-        targetNumber = parts[1];
-    }
-
-    if (!targetNumber) {
-        sender(message, client, `❌ [${BOT_NAME}] Fournis un numéro ou réponds à un message pour te connecter.`);
-        return;
-    }
-
-    targetNumber = targetNumber.replace('@s.whatsapp.net', '').trim();
-
-    console.log(`[${BOT_NAME}] 🔍 Vérification connexion pour ${targetNumber}`);
-
-    if (sessions[targetNumber]) {
-        sender(message, client, `[${BOT_NAME}] Ce numéro est déjà connecté.`);
-    } else {
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect } = update;
+    if (connection === 'close') {
+      console.log(`[${BOT_NAME}] 🔌 Session fermée ${targetNumber}`);
+      const shouldReconnect =
+        lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+      if (shouldReconnect) {
+        console.log(`[${BOT_NAME}] 🔄 Reconnexion ${targetNumber}…`);
         await startSession(targetNumber, message, client);
+      } else {
+        console.log(`[${BOT_NAME}] 🚫 Déconnexion définitive ${targetNumber}`);
+        removeSession(targetNumber);
+      }
+    } else if (connection === 'open') {
+      console.log(`[${BOT_NAME}] ✅ Session active ${targetNumber}`);
     }
+  });
+
+  // Génération code pairing
+  setTimeout(async () => {
+    if (!state.creds.registered && typeof sock.requestPairingCode === 'function') {
+      const code = await sock.requestPairingCode(targetNumber);
+      console.log(`[${BOT_NAME}] 📲 Code pairing ${targetNumber} : ${code}`);
+      if (message) sender(message, client, `${code}`);
+    }
+  }, 5_000);
+
+  // Timeout pairing
+  setTimeout(async () => {
+    if (!state.creds.registered) {
+      console.log(`[${BOT_NAME}] ❌ Pairing expiré ${targetNumber}`);
+      if (message) sender(message, client, `❌ Pairing expiré pour ${targetNumber}. Réessayez.`);
+      removeSession(targetNumber);
+    }
+  }, 60_000);
+
+  // Messages
+  sock.ev.on('messages.upsert', async (msg) => handleIncomingMessage(msg, sock));
+
+  // Sauvegarde
+  sessions[targetNumber] = sock;
+  saveSessionNumber(targetNumber);
+
+  // Config par défaut
+  configManager.config.users[targetNumber] = {
+    sudoList: [],
+    tagAudioPath: 'tag.mp3',
+    antilink: false,
+    response: true,
+    autoreact: false,
+    prefix: '.',
+    reaction: '🌹',
+    welcome: false,
+    record: false,
+    type: false
+  };
+  configManager.save();
+
+  return sock;
 }
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Exports
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── 5. Reconnexion automatique ------------------------------------------
+async function reconnect(client) {
+  if (!fs.existsSync(SESSIONS_FILE)) return;
+  const list = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8')).sessions || [];
+  for (const num of list) {
+    console.log(`[${BOT_NAME}] 🔄 Reconnexion ${num}`);
+    try {
+      await startSession(num, null, client);
+    } catch (e) {
+      console.error(`[${BOT_NAME}] ❌ Erreur reconnexion ${num} :`, e);
+      removeSession(num);
+    }
+  }
+}
 
+// ── 6. Connexion manuelle (commande) ------------------------------------
+async function connect(message, client) {
+  let targetNumber;
+
+  if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
+    targetNumber = message.message.extendedTextMessage.contextInfo.participant;
+  } else {
+    const body = message.message?.extendedTextMessage?.text || message.message?.conversation || '';
+    const parts = body.split(/\s+/);
+    targetNumber = parts[1];
+  }
+
+  if (!targetNumber) {
+    return sender(message, client, `❌ [${BOT_NAME}] Fournis un numéro ou réponds à un message pour te connecter.`);
+  }
+
+  targetNumber = targetNumber.replace('@s.whatsapp.net', '').trim();
+
+  if (sessions[targetNumber]) {
+    return sender(message, client, `[${BOT_NAME}] Ce numéro est déjà connecté.`);
+  }
+
+  await startSession(targetNumber, message, client);
+}
+
+// ── 7. Exportations -----------------------------------------------------
 export default { connect, reconnect };
 
-console.log(`\n╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮`);
-console.log(`│  ${BOT_NAME} prêt à fonctionner`);
-console.log(`│  Créateur : ${CREATOR}`);
-console.log(`╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯\n`);
+// ── 8. Banner -----------------------------------------------------------
+console.log(
+  `\n╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮
+│  ${BOT_NAME} prêt à fonctionner
+│  Créateur : ${CREATOR}
+╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯\n`
+);
