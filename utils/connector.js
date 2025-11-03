@@ -1,253 +1,201 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// startSession.js
+// connector.js  (anciennement startSession.js)
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴
 // Gestion des sessions WhatsApp
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import pkg from 'baileys';
-const { makeWASocket, useMultiFileAuthState, DisconnectReason} = pkg;
-
-import configManager from '../utils/managerConfigs.js';
 import fs from 'fs';
-import {handleIncomingMessage} from '../messages/messageHandler.js';
+import configManager from '../utils/managerConfigs.js';
+import { handleIncomingMessage } from '../messages/messageHandler.js';
 import group from '../commands/group.js';
 import antimanage from '../commands/antimanage.js';
 import autoJoin from '../utils/autoJoin.js';
 
-/* -------------------------
-Test diagnostic 
- ------------------------- */
-console.log('=== DIAGNOSTIC ===');
-console.log('Baileys package:', pkg);
-console.log('useMultiFileAuthState type:', typeof useMultiFileAuthState);
-console.log('makeWASocket type:', typeof makeWASocket);
-console.log('DisconnectReason:', DisconnectReason);
-console.log('=== FIN DIAGNOSTIC ===');
+// ── 1. Import sécurisé de baileys ------------------------------------------
+let pkg;
+try {
+  pkg = await import('baileys');
+} catch (e) {
+  console.error('❌  Le module « baileys » est introuvable. Lancez « npm install ».');
+  process.exit(1);
+}
+const { makeWASocket, useMultiFileAuthState, DisconnectReason } = pkg;
 
-
+// ── 2. Constantes & helpers -------------------------------------------------
 const SESSIONS_FILE = 'sessions.json';
-const sessions = new Map();
-const BOT_NAME = '🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴';
+const sessions      = new Map();
+const BOT_NAME      = '🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴';
 const BOT_SIGNATURE = '🎴𝐃𝛯𝐕 ᬁ 𝛫𝑈𝑅𝛩𝛮𝛥🎴';
 
-/* -------------------------
-Config cache helper
-------------------------- */
 let configCache = null;
 function getConfig() {
-if (!configCache) {
-configCache = configManager.config || {};
-configCache.users = configCache.users || {};
-configCache.users.root = configCache.users.root || {};
-}
-return configCache;
+  if (!configCache) {
+    configCache = configManager.config || {};
+    configCache.users = configCache.users || {};
+    configCache.users.root = configCache.users.root || {};
+  }
+  return configCache;
 }
 
-/* -------------------------
-Persist session list safely
-------------------------- */
+// ── 3. Sauvegarde de la liste des sessions ----------------------------------
 function saveSessionNumber(number) {
-try {
-let sessionsList = [];
-if (fs.existsSync(SESSIONS_FILE)) {
-const raw = fs.readFileSync(SESSIONS_FILE, 'utf8') || '{}';
-const data = JSON.parse(raw);
-sessionsList = Array.isArray(data.sessions) ? data.sessions : [];
-}
-if (!sessionsList.includes(number)) {
-sessionsList.push(number);
-fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: sessionsList }, null, 2));
-}
-} catch (err) {
-console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ❌ [" + BOT_NAME + "] Erreur lecture/écriture sessions:\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);
-}
+  try {
+    let sessionsList = [];
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const raw = fs.readFileSync(SESSIONS_FILE, 'utf8') || '{}';
+      const data = JSON.parse(raw);
+      sessionsList = Array.isArray(data.sessions) ? data.sessions : [];
+    }
+    if (!sessionsList.includes(number)) {
+      sessionsList.push(number);
+      fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: sessionsList }, null, 2));
+    }
+  } catch (err) {
+    console.error(`[${BOT_NAME}] Erreur lecture/écriture sessions :`, err.message);
+  }
 }
 
-/* -------------------------
-Remove session (clean)
-------------------------- */
+// ── 4. Suppression propre d’une session ------------------------------------
 function removeSession(number) {
-try {
-console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🗑️ Suppression session " + number + "\n│ [" + BOT_NAME + "] s'en occupe.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
+  console.log(`[${BOT_NAME}] Suppression session : ${number}`);
+  try {
+    // fichier
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const raw  = fs.readFileSync(SESSIONS_FILE, 'utf8') || '{}';
+      const data = JSON.parse(raw);
+      const updated = (data.sessions || []).filter(n => n !== number);
+      fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: updated }, null, 2));
+    }
+    // dossier auth
+    const sessionPath = `./sessions/${number}`;
+    if (fs.existsSync(sessionPath)) fs.rmSync(sessionPath, { recursive: true, force: true });
+    // mémoire
+    sessions.delete(number);
 
-if (fs.existsSync(SESSIONS_FILE)) {      
-        const raw = fs.readFileSync(SESSIONS_FILE, 'utf8') || '{}';      
-        const data = JSON.parse(raw);      
-        const sessionsList = Array.isArray(data.sessions) ? data.sessions : [];      
-        const updated = sessionsList.filter(n => n !== number);      
-        fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions: updated }, null, 2));      
-    }      
-
-    const sessionPath = `./sessions/${number}`;      
-    if (fs.existsSync(sessionPath)) fs.rmSync(sessionPath, { recursive: true, force: true });      
-
-    sessions.delete(number);      
-
-    const cfg = getConfig();      
-    if (cfg.users?.root?.primary === number) {      
-        cfg.users.root.primary = '';      
-        configManager.save();      
-    }      
-
-    console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ✅ [" + BOT_NAME + "] Session " + number + " supprimée\n│ avec élégance.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");    
-
-} catch (err) {    
-    console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 💥 [" + BOT_NAME + "] Erreur suppression session " + number + ":\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);    
+    // config
+    const cfg = getConfig();
+    if (cfg.users?.root?.primary === number) {
+      cfg.users.root.primary = '';
+      configManager.save();
+    }
+    console.log(`[${BOT_NAME}] Session ${number} supprimée.`);
+  } catch (err) {
+    console.error(`[${BOT_NAME}] Erreur suppression session ${number} :`, err.message);
+  }
 }
 
-}
-
-/* -------------------------
-startSession
-
-targetNumber: digits-only string
-
-handler: function(upsert, sock) -> handles messages
-
-initConfig: if true, create default user config
-------------------------- */
+// ── 5. Fonction principale : démarrer une session ---------------------------
 async function startSession(targetNumber, handler, initConfig = false) {
-try {
-console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🚀 [" + BOT_NAME + "] Démarrage session pour " + targetNumber + "\n│ préparation.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
+  console.log(`[${BOT_NAME}] Démarrage session pour ${targetNumber}`);
 
-const sessionPath = `./sessions/${targetNumber}`;      
-    if (!fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true });      
+  const sessionPath = `./sessions/${targetNumber}`;
+  if (!fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true });
 
-    const { state, saveCreds } = await useMultiFileAuthState(sessionPath);      
+  const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
 
-    const sock = makeWASocket({      
-        auth: state,      
-        printQRInTerminal: false,      
-        syncFullHistory: false,      
-        markOnlineOnConnect: false,      
-        generateHighQualityLinkPreview: false      
-    });      
+  const sock = makeWASocket({
+    auth: state,
+    printQRInTerminal: false,
+    syncFullHistory: false,
+    markOnlineOnConnect: false,
+    generateHighQualityLinkPreview: false
+  });
 
-    // persist credentials when they change      
-    sock.ev.on('creds.update', saveCreds);      
+  // Sauvegarde des credentials
+  sock.ev.on('creds.update', saveCreds);
 
-    // robust connection updates handling      
-    sock.ev.on('connection.update', async (update) => {      
-        try {      
-            const { connection, lastDisconnect } = update;      
-
-            if (connection === 'close') {      
-                console.warn("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ⚠️ [" + BOT_NAME + "] Session " + targetNumber + " fermée.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");      
-                const statusCode = lastDisconnect?.error?.output?.statusCode;      
-                const shouldReconnect = statusCode !== DisconnectReason.loggedOut;      
-
-                if (shouldReconnect) {      
-                    console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🔄 [" + BOT_NAME + "] Tentative de reconnexion\n│ pour " + targetNumber + "...\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");      
-                    // schedule immediate reconnect without blocking      
-                    setImmediate(() => startSession(targetNumber, handler, false));      
-                } else {      
-                    console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🚫 [" + BOT_NAME + "] Déconnexion définitive détectée\n│ pour " + targetNumber + ". Suppression en cours.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");      
-                    removeSession(targetNumber);      
-                }      
-            } else if (connection === 'open') {      
-                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ✅ [" + BOT_NAME + "] Session ouverte : " + targetNumber + "\n│ Connecté avec distinction.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");      
-                
-                // Auto-join des newsletters après connexion
-                try {
-                    await autoJoin(sock, "@newsletter");
-                    await autoJoin(sock, "@newsletter");
-                } catch (autoJoinErr) {
-                    console.warn("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ⚠️ [" + BOT_NAME + "] Erreur auto-join newsletters:\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", autoJoinErr?.message || autoJoinErr);
-                }
-            }      
-        } catch (err) {      
-            console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 💥 [" + BOT_NAME + "] Erreur connection.update (" + targetNumber + "):\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);      
-        }      
-    });      
-
-    // Mécanisme de timeout pour le pairing code
-    let pairingTimeout;
-    let removalTimeout;
-
-    // Demander le pairing code après 5 secondes
-    pairingTimeout = setTimeout(async () => {
+  // Gestion connexion
+  sock.ev.on('connection.update', async (update) => {
+    try {
+      const { connection, lastDisconnect } = update;
+      if (connection === 'close') {
+        console.warn(`[${BOT_NAME}] Session ${targetNumber} fermée.`);
+        const statusCode = lastDisconnect?.error?.output?.statusCode;
+        const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+        if (shouldReconnect) {
+          console.log(`[${BOT_NAME}] Reconnexion immédiate pour ${targetNumber}...`);
+          setImmediate(() => startSession(targetNumber, handler, false));
+        } else {
+          console.log(`[${BOT_NAME}] Déconnexion définitive – suppression ${targetNumber}.`);
+          removeSession(targetNumber);
+        }
+      } else if (connection === 'open') {
+        console.log(`[${BOT_NAME}] Session ouverte : ${targetNumber}`);
+        // Auto-join newsletters
         try {
-            if (!state.creds.registered && typeof sock.requestPairingCode === 'function') {
-                const code = await sock.requestPairingCode(targetNumber, 'KURONAMD');
-                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🔑 [" + BOT_NAME + "] Code d'appariement pour " + targetNumber + ": " + code + "\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
-                console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 📱 [" + BOT_NAME + "] Entrez ce code dans votre\n│ WhatsApp pour finaliser la connexion.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
-            }
-        } catch (err) {
-            console.warn("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ⚠️ [" + BOT_NAME + "] Impossible de générer le code\n│ pour " + targetNumber + ":\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);
+          await autoJoin(sock, '@newsletter');
+        } catch (e) {
+          console.warn(`[${BOT_NAME}] Erreur auto-join :`, e.message);
         }
-    }, 5000);
+      }
+    } catch (err) {
+      console.error(`[${BOT_NAME}] Erreur connection.update (${targetNumber}) :`, err.message);
+    }
+  });
 
-    // Timeout de suppression après 60 secondes si non enregistré
-    removalTimeout = setTimeout(() => {
-        if (!state.creds.registered) {
-            console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 🚫 [" + BOT_NAME + "] Échec appariement pour " + targetNumber + "\n│ Suppression de la session.\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");
-            removeSession(targetNumber);
-            return;
-        }
-    }, 60000);
+  // Messages
+  sock.ev.on('messages.upsert', async (upsert) => {
+    try {
+      await handler(upsert, sock);
+    } catch (err) {
+      console.error(`[${BOT_NAME}] Erreur handler messages (${targetNumber}) :`, err.message);
+    }
+  });
 
-    // Nettoyer les timeouts si la session se connecte
-    sock.ev.on('connection.update', (update) => {
-        if (update.connection === 'open') {
-            clearTimeout(pairingTimeout);
-            clearTimeout(removalTimeout);
-        }
-    });
+  // Gestion participants
+  sock.ev.on('group-participants.update', async (update) => {
+    try {
+      await group.welcome(update, sock);
+    } catch (err) {
+      console.error(`[${BOT_NAME}] Erreur welcome (${targetNumber}) :`, err.message);
+    }
+  });
 
-    // messages -> delegate to provided handler (safe)      
-    sock.ev.on('messages.upsert', async (upsert) => {      
-        try {      
-            await handler(upsert, sock);      
-        } catch (err) {      
-            console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 💥 [" + BOT_NAME + "] Erreur dans handler messages (" + targetNumber + "):\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);      
-        }      
-    });      
+  // Pairing code & timeouts
+  let pairingTimeout, removalTimeout;
 
-    // group participant updates -> welcome (safe)      
-    sock.ev.on('group-participants.update', async (update) => {      
-        try {      
-            await group.welcome(update, sock);      
-        } catch (err) {      
-            console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 💥 [" + BOT_NAME + "] Erreur welcome (" + targetNumber + "):\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);      
-        }      
-    });      
+  pairingTimeout = setTimeout(async () => {
+    if (!state.creds.registered && typeof sock.requestPairingCode === 'function') {
+      const code = await sock.requestPairingCode(targetNumber);
+      console.log(`[${BOT_NAME}] Code d’appariement pour ${targetNumber} : ${code}`);
+    }
+  }, 5000);
 
-    // register session      
-    sessions.set(targetNumber, sock);      
-    saveSessionNumber(targetNumber);      
+  removalTimeout = setTimeout(() => {
+    if (!state.creds.registered) {
+      console.log(`[${BOT_NAME}] Échec appariement – suppression ${targetNumber}.`);
+      removeSession(targetNumber);
+    }
+  }, 60000);
 
-    // create default user config if requested      
-    const cfg = getConfig();      
-    if (initConfig) {      
-        cfg.users[targetNumber] = {      
-            antilink: false,      
-            autoreact: false,      
-            like: false,      
-            online: false,      
-            prefix: '.',      
-            record: false,      
-            response: true,      
-            sudoList: [],      
-            tagAudioPath: 'tag.mp3',      
-            type: false,      
-            welcome: false      
-        };      
-        configManager.save();      
-    }      
+  sock.ev.on('connection.update', (update) => {
+    if (update.connection === 'open') {
+      clearTimeout(pairingTimeout);
+      clearTimeout(removalTimeout);
+    }
+  });
 
-    // set root primary session      
-    cfg.users.root.primary = targetNumber;      
-    configManager.save();      
+  // Enregistrement
+  sessions.set(targetNumber, sock);
+  saveSessionNumber(targetNumber);
 
-    console.log("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ ✨ [" + BOT_NAME + "] Session " + targetNumber + " prête.\n│ Signé : " + BOT_SIGNATURE + "\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯");      
+  // Config par défaut si demandé
+  const cfg = getConfig();
+  if (initConfig) {
+    cfg.users[targetNumber] = {
+      antilink: false, autoreact: false, like: false, online: false,
+      prefix: '.', record: false, response: true, sudoList: [],
+      tagAudioPath: 'tag.mp3', type: false, welcome: false
+    };
+    configManager.save();
+  }
+  cfg.users.root.primary = targetNumber;
+  configManager.save();
 
-    return sock;    
-
-} catch (err) {    
-    console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ 💥 [" + BOT_NAME + "] Échec création session " + targetNumber + ":\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err?.message || err);    
-    throw err;    
+  console.log(`[${BOT_NAME}] Session ${targetNumber} prête. Signé : ${BOT_SIGNATURE}`);
+  return sock;
 }
 
-}
-
+// ── 6. Export unique --------------------------------------------------------
 export default startSession;
+export { sessions };
