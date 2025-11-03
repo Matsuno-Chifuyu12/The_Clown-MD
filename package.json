@@ -5,16 +5,30 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "prestart": "npm install --omit=dev",
     "start": "node index.js",
-    "restart": "rm -rf auth_info_baileys && npm start",
-    "dev": "node --trace-warnings index.js",
-    "fix-deps": "rm -rf node_modules package-lock.json && npm install"
+    "restart": "rm -r auth_info_baileys || node index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matsuno-chifuyu12/kurona-md.git"
+  },
+  "keywords": [
+    "kurona",
+    "Matsuno-chifuyu12",
+    "bot",
+    "bailey",
+    "whatsapp"
+  ],
+  "author": "Kurona Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Matsuno-chifuyu12/kurona-md/issues"
+  },
+  "homepage": "https://github.com/Matsuno-chifuyu12/kurona-md#readme",
   "dependencies": {
     "axios": "^1.6.0",
     "axios-retry": "^4.5.0",
-    "baileys": "https://github.com/Matsuno-chifuyu12/kurona_bail_mod/raw/main/releases/kurona_bail_mod-1.0.0.tar.gz",
+    "bailey": "https://github.com/Matsuno-chifuyu12/kurona_bail_mod/raw/main/releases/kurona_bail_mod-1.0.0.tar.gz",
     "fluent-ffmpeg": "^2.1.3",
     "node-fetch": "^3.3.2",
     "node-telegram-bot-api": "^0.66.0",
@@ -25,15 +39,10 @@
     "qrcode-terminal": "^0.12.0",
     "pino": "^8.15.0"
   },
+  "devDependencies": {
+    "ts-jest": "^29.1.1"
+  },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "keywords": [
-    "whatsapp",
-    "bot",
-    "baileys",
-    "kurona"
-  ],
-  "author": "Kurona Team",
-  "license": "MIT"
+  }
 }
