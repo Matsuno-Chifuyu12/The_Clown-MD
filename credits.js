@@ -1,32 +1,36 @@
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝑿𝛭𝑫 🎴
-//  Gestion des crédits
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+// 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴  
+// Gestion des crédits (cache & fetch)  
+//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
 
-import fetch from "node-fetch"; //
-import dayjs from "dayjs"; // pour formater la date facilement
+const api = "https://raw.githubusercontent.com/Matsuno-Chifuyu12/kurona-md/refs/heads/main/credits.json";
 
-const API_CREDITS = "https://raw.githubusercontent.com/Matsuno-Chifuyu12/the_clown-md/refs/heads/main/credits.json";
-
-// Cache interne pour éviter de re-fetch inutilement
 let credsCache = null;
 
 /**
- * Récupère les crédits depuis le dépôt GitHub ou cache
- * @returns {Promise<Object|null>} JSON des crédits
+ * Récupère les crédits depuis l'API
+ * Utilise le cache si déjà récupéré
+ * @returns {Promise<Object|null>}
  */
 export async function getCreds() {
-  if (credsCache) return credsCache;
+    if (credsCache) {
+        console.log("🎴 [𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫] : Crédit récupéré depuis le cache.");
+        return credsCache;
+    }
 
-  try {
-    const res = await fetch(API_CREDITS);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    try {
+        const res = await fetch(api);
 
-    const data = await res.json();
-    credsCache = data;
-    return data;
-  } catch (err) {
-    console.error("╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╮\n│ Erreur lors du fetch des crédits :\n╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅╯", err.message);
-    return null;
-  }
+        if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
+
+        const data = await res.json();
+        credsCache = data;
+
+        console.log("🎴 [𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫] : Crédit récupéré avec succès depuis l'API.");
+        return data;
+
+    } catch (err) {
+        console.error(`❌ [𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫] Erreur lors de la récupération des crédits : ${err.message}`);
+        return null;
+    }
 }
