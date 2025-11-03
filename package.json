@@ -1,7 +1,7 @@
 {
   "name": "kurona-md",
   "version": "1.0.0",
-  "description": "...",
+  "description": "KURONA-MD - A multi-device WhatsApp & Telegram bot built with Baileys",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -12,6 +12,28 @@
     "postinstall": "npm run fix-imports",
     "create-alias": "mkdir -p node_modules/baileys && echo 'import baileys from \"@whiskeysockets/baileys\"; export default baileys; export * from \"@whiskeysockets/baileys\";' > node_modules/baileys/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matsuno-Chifuyu12/the_clown-md.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "telegram",
+    "bot",
+    "kurona-md",
+    "baileys",
+    "multi-device",
+    "telegraf",
+    "group-management",
+    "anti-management",
+    "media-downloader"
+  ],
+  "author": "DEV | KURONA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Matsuno-Chifuyu12/the_clown-md/issues"
+  },
+  "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.20",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
