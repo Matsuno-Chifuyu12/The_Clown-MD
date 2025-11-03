@@ -1,42 +1,17 @@
 {
   "name": "kurona-md",
   "version": "1.0.0",
-  "description": "KURONA-MD - A multi-device WhatsApp & Telegram bot built with Baileys",
+  "description": "KURONA-MD - WhatsApp bot with Baileys",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "restart": "rm -rf auth_info_baileys && node index.js",
-    "build": "npm install",
-    "fix-imports": "node fix-imports.js",
-    "postinstall": "npm run fix-imports",
     "create-alias": "mkdir -p node_modules/baileys && echo 'import baileys from \"@whiskeysockets/baileys\"; export default baileys; export * from \"@whiskeysockets/baileys\";' > node_modules/baileys/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Matsuno-Chifuyu12/the_clown-md.git"
-  },
-  "keywords": [
-    "whatsapp",
-    "telegram",
-    "bot",
-    "kurona-md",
-    "baileys",
-    "multi-device",
-    "telegraf",
-    "group-management",
-    "anti-management",
-    "media-downloader"
-  ],
-  "author": "DEV | KURONA",
+  "author": "DEV KURONA",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Matsuno-Chifuyu12/the_clown-md/issues"
-  },
-  "homepage": "https://github.com/Matsuno-Chifuyu12/the_clown-md#readme",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.20",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "axios-retry": "^4.5.0",
     "dayjs": "^1.11.10",
     "node-fetch": "^3.3.2",
@@ -45,9 +20,6 @@
     "uuid": "^11.1.0",
     "wa-sticker-formatter": "^4.4.4",
     "lru-cache": "^11.2.2"
-  },
-  "devDependencies": {
-    "ts-jest": "^29.1.1"
   },
   "engines": {
     "node": ">=20.x"
