@@ -1,198 +1,165 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// viewonce.js  –  version corrigée & complète
 // 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴
 // Commande : Révélation des Médias Éphémères
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { normalizeMessageContent } from '../messages/normalizeContent.js';
-import pkg from 'baileys';
-const { downloadMediaMessage } = pkg;
 import fs from 'fs';
 import path from 'path';
 
-// Cache des médias traités pour performance
-const mediaCache = new Map();
-const CACHE_TTL = 300000; // 5 minutes
+// ── 1. Import sécurisé de baileys ---------------------------------------
+let pkg;
+try {
+  pkg = await import('baileys');
+} catch (e) {
+  console.error('❌  Le module « baileys » est introuvable. Lancez « npm install ».');
+  process.exit(1);
+}
+const { downloadMediaMessage } = pkg;
 
+// ── 2. Cache & constantes -----------------------------------------------
+const mediaCache = new Map();          // buffer + timestamp
+const CACHE_TTL  = 5 * 60 * 1000;      // 5 min
+
+// ── 3. Commande principale ----------------------------------------------
 export async function viewonce(message, client) {
-    const remoteJid = message.key.remoteJid;
-    
-    try {
-        // Vérification protocolaire du message cité
-        const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-        
-        if (!quotedMessage) {
-            await client.sendMessage(remoteJid, {
-                text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n❌ Aucun message ciblé\n"Veuillez répondre à un média éphémère pour que je puisse procéder à sa révélation, Monsieur/Madame."`,
-                quoted: message
-            });
-            return;
-        }
+  const remoteJid = message.key.remoteJid;
 
-        // Détection élégante du média éphémère
-        const mediaType = detectViewOnceMedia(quotedMessage);
-        
-        if (!mediaType) {
-            await client.sendMessage(remoteJid, {
-                text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n🔍 Média non éphémère\n"Le message sélectionné ne semble pas être un média à visualisation unique.\n\nJe ne peux révéler que les médias éphémères."`,
-                quoted: message
-            });
-            return;
-        }
-
-        console.log(`👁️ Révélation média ${mediaType} demandée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
-
-        // Vérification du cache pour optimisation
-        const cacheKey = `${message.key.id}_${mediaType}`;
-        const cachedMedia = mediaCache.get(cacheKey);
-        
-        if (cachedMedia && (Date.now() - cachedMedia.timestamp) < CACHE_TTL) {
-            await sendCachedMedia(client, remoteJid, cachedMedia, mediaType, message);
-            return;
-        }
-
-        // Révélation protocolaire du média
-        await revealViewOnceMedia(quotedMessage, client, remoteJid, mediaType, message, cacheKey);
-
-    } catch (error) {
-        console.error('💥 Erreur révélation média éphémère:', error.message);
-        
-        await client.sendMessage(remoteJid, {
-            text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n❌ Révélation échouée\n"Je m'excuse, mais la révélation du média éphémère a rencontré une difficulté.\n\nDétail: ${error.message}"`,
-            quoted: message
-        });
-    }
-}
-
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔹 Fonctions 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function detectViewOnceMedia(quotedMessage) {
-    if (quotedMessage?.imageMessage?.viewOnce) return 'image';
-    if (quotedMessage?.videoMessage?.viewOnce) return 'video';
-    if (quotedMessage?.audioMessage?.viewOnce) return 'audio';
-    return null;
-}
-
-async function revealViewOnceMedia(quotedMessage, client, remoteJid, mediaType, originalMessage, cacheKey) {
-    // Notification de traitement
-    await client.sendMessage(remoteJid, {
-        text: `> 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n⚡ Révélation en cours...\n"Je procède à la révélation de ce média ${mediaType} avec la plus grande discrétion."`,
-        quoted: originalMessage
-    });
-
-    // Normalisation et modification du média
-    const content = normalizeMessageContent(quotedMessage);
-    disableViewOnceProtection(content);
-
-    // Téléchargement du média
-    const mediaBuffer = await downloadMediaMessage(
-        { message: content },
-        'buffer',
-        {}
-    );
-
-    if (!mediaBuffer) {
-        throw new Error('Échec du téléchargement du média');
+  try {
+    const quoted = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+    if (!quoted) {
+      return client.sendMessage(remoteJid, {
+        text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n❌ Aucun message ciblé\n« Veuillez répondre à un média éphémère pour que je puisse procéder à sa révélation, Monsieur / Madame. »`,
+        quoted: message
+      });
     }
 
-    // Sauvegarde temporaire 
-    const fileExtension = getFileExtension(mediaType);
-    const tempFilePath = path.resolve(`./temp_revealed_${Date.now()}.${fileExtension}`);
-    
-    fs.writeFileSync(tempFilePath, mediaBuffer);
+    const mediaType = detectViewOnceMedia(quoted);
+    if (!mediaType) {
+      return client.sendMessage(remoteJid, {
+        text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n🔍 Média non éphémère\n« Le message sélectionné ne semble pas être un média à visualisation unique.\n\nJe ne peux révéler que les médias éphémères. »`,
+        quoted: message
+      });
+    }
 
-    // Envoi protocolaire du média révélé
-    const mediaConfig = getMediaConfig(mediaType, tempFilePath);
+    console.log(`👁️  Révélation média ${mediaType} demandée | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
+
+    // Cache ?
+    const cacheKey = `${message.key.id}_${mediaType}`;
+    const cached   = mediaCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+      await sendCachedMedia(client, remoteJid, cached, mediaType, message);
+      return;
+    }
+
+    // Révélation
+    await revealViewOnceMedia(quoted, client, remoteJid, mediaType, message, cacheKey);
+
+  } catch (error) {
+    console.error('💥 Erreur révélation média éphémère :', error.message);
     await client.sendMessage(remoteJid, {
-        ...mediaConfig,
-        caption: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n🔓 Média éphémère révélé\n"Voici le contenu qui était destiné à rester éphémère.\n\nType: ${mediaType.toUpperCase()} | Révélé avec élégance."`
-    }, { quoted: originalMessage });
-
-    // Mise en cache 
-    mediaCache.set(cacheKey, {
-        buffer: mediaBuffer,
-        type: mediaType,
-        timestamp: Date.now()
+      text: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n❌ Révélation échouée\n« Je m’excuse, mais la révélation du média éphémère a rencontré une difficulté.\n\nDétail : ${error.message} »`,
+      quoted: message
     });
-
-    // Nettoyage 
-    fs.unlinkSync(tempFilePath);
-
-    console.log(`✅ Média ${mediaType} révélé avec succès | 🎴𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫🎴`);
+  }
 }
 
-async function sendCachedMedia(client, remoteJid, cachedMedia, mediaType, originalMessage) {
-    const tempFilePath = path.resolve(`./temp_cached_${Date.now()}.${getFileExtension(mediaType)}`);
-    
-    fs.writeFileSync(tempFilePath, cachedMedia.buffer);
-
-    const mediaConfig = getMediaConfig(mediaType, tempFilePath);
-    await client.sendMessage(remoteJid, {
-        ...mediaConfig,
-        caption: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n💫 Média depuis les archives\n"Ce média avait déjà été révélé précédemment.\n\nServi depuis le cache pour plus de célérité."`
-    }, { quoted: originalMessage });
-
-    fs.unlinkSync(tempFilePath);
-    
-    console.log(`♻️ Média ${mediaType} servi depuis le cache | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
+// ── 4. Détection du type de média éphémère ------------------------------
+function detectViewOnceMedia(quoted) {
+  if (quoted?.imageMessage?.viewOnce)  return 'image';
+  if (quoted?.videoMessage?.viewOnce)  return 'video';
+  if (quoted?.audioMessage?.viewOnce)  return 'audio';
+  return null;
 }
 
-function disableViewOnceProtection(content) {
-    const disableRecursive = (obj) => {
-        if (typeof obj !== 'object' || obj === null) return;
-        
-        Object.keys(obj).forEach(key => {
-            if (key === 'viewOnce' && typeof obj[key] === 'boolean') {
-                obj[key] = false;
-            } else if (typeof obj[key] === 'object') {
-                disableRecursive(obj[key]);
-            }
-        });
-    };
-    
-    disableRecursive(content);
+// ── 5. Révélation proprement dite ---------------------------------------
+async function revealViewOnceMedia(quoted, client, remoteJid, mediaType, originalMessage, cacheKey) {
+  await client.sendMessage(remoteJid, {
+    text: `> 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n⚡ Révélation en cours…\n« Je procède à la révélation de ce média ${mediaType} avec la plus grande discrétion. »`,
+    quoted: originalMessage
+  });
+
+  // Normalisation + désactivation du flag viewOnce
+  const content = normalizeMessageContent(quoted);
+  disableViewOnceProtection(content);
+
+  // Téléchargement
+  const mediaBuffer = await downloadMediaMessage({ message: content }, 'buffer', {});
+  if (!mediaBuffer) throw new Error('Échec du téléchargement du média');
+
+  // Fichier temporaire
+  const ext         = getFileExtension(mediaType);
+  const tempPath    = path.resolve(`./temp_revealed_${Date.now()}.${ext}`);
+  fs.writeFileSync(tempPath, mediaBuffer);
+
+  // Envoi
+  const mediaConfig = getMediaConfig(mediaType, tempPath);
+  await client.sendMessage(remoteJid, {
+    ...mediaConfig,
+    caption: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n🔓 Média éphémère révélé\n« Voici le contenu qui était destiné à rester éphémère.\n\nType : ${mediaType.toUpperCase()} | Révélé avec élégance. »`
+  }, { quoted: originalMessage });
+
+  // Cache + nettoyage
+  mediaCache.set(cacheKey, { buffer: mediaBuffer, type: mediaType, timestamp: Date.now() });
+  fs.unlinkSync(tempPath);
+
+  console.log(`✅ Média ${mediaType} révélé avec succès | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
 }
 
+// ── 6. Envoi depuis le cache --------------------------------------------
+async function sendCachedMedia(client, remoteJid, cached, mediaType, originalMessage) {
+  const tempPath = path.resolve(`./temp_cached_${Date.now()}.${getFileExtension(mediaType)}`);
+  fs.writeFileSync(tempPath, cached.buffer);
+
+  const mediaConfig = getMediaConfig(mediaType, tempPath);
+  await client.sendMessage(remoteJid, {
+    ...mediaConfig,
+    caption: `🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴\n\n💫 Média depuis les archives\n« Ce média avait déjà été révélé précédemment.\n\nServi depuis le cache pour plus de célérité. »`
+  }, { quoted: originalMessage });
+
+  fs.unlinkSync(tempPath);
+  console.log(`♻️  Média ${mediaType} servi depuis le cache | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
+}
+
+// ── 7. Désactivation récursive du flag viewOnce -------------------------
+function disableViewOnceProtection(obj) {
+  const recurse = (o) => {
+    if (typeof o !== 'object' || o === null) return;
+    for (const k of Object.keys(o)) {
+      if (k === 'viewOnce' && typeof o[k] === 'boolean') o[k] = false;
+      else if (typeof o[k] === 'object') recurse(o[k]);
+    }
+  };
+  recurse(obj);
+}
+
+// ── 8. Extensions & configs ---------------------------------------------
 function getFileExtension(mediaType) {
-    const extensions = {
-        'image': 'jpeg',
-        'video': 'mp4',
-        'audio': 'mp3'
-    };
-    return extensions[mediaType] || 'bin';
+  return { image: 'jpeg', video: 'mp4', audio: 'mp3' }[mediaType] || 'bin';
 }
 
 function getMediaConfig(mediaType, filePath) {
-    const configs = {
-        'image': { image: { url: filePath } },
-        'video': { video: { url: filePath } },
-        'audio': { audio: { url: filePath }, mimetype: 'audio/mp4' }
-    };
-    return configs[mediaType] || {};
+  return {
+    image: { image: { url: filePath } },
+    video: { video: { url: filePath } },
+    audio: { audio: { url: filePath }, mimetype: 'audio/mp4' }
+  }[mediaType] || {};
 }
 
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔹 Nettoyage périodique du cache
-//━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+// ── 9. Nettoyage périodique du cache -------------------------------------
 function cleanupMediaCache() {
-    const now = Date.now();
-    let cleanedCount = 0;
-    
-    for (const [key, value] of mediaCache.entries()) {
-        if (now - value.timestamp > CACHE_TTL) {
-            mediaCache.delete(key);
-            cleanedCount++;
-        }
+  const now = Date.now();
+  let cleaned = 0;
+  for (const [k, v] of mediaCache.entries()) {
+    if (now - v.timestamp > CACHE_TTL) {
+      mediaCache.delete(k);
+      cleaned++;
     }
-    
-    if (cleanedCount > 0) {
-        console.log(`🧹 ${cleanedCount} médias nettoyés du cache | 𝓜𝓪𝓳𝓸𝓻𝓭𝓸𝓶𝓮 𝓢é𝓫𝓪𝓼𝓽𝓲𝓮𝓷 🎴`);
-    }
+  }
+  if (cleaned > 0) console.log(`🧹  ${cleaned} médias nettoyés du cache | 🎴 𝛫𝑈𝑅𝛩𝛮𝛥 — 𝛭𝑫 🎴`);
 }
+setInterval(cleanupMediaCache, 600_000);
 
-// Nettoyage toutes les 10 minutes
-setInterval(cleanupMediaCache, 600000);
-
+// ── 10. Export unique ----------------------------------------------------
 export default viewonce;
