@@ -8,7 +8,7 @@
 // ── 1. Import sécurisé de baileys ---------------------------------------
 let pkg;
 try {
-  pkg = await import('baileys');
+  pkg = await import('@whiskeysockets/baileys');
 } catch (e) {
   console.error('❌  Le module « baileys » est introuvable. Lancez « npm install ».');
   process.exit(1);
