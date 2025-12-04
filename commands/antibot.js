@@ -9,7 +9,7 @@ import fs from 'fs';
 // ── 1. Import sécurisé de baileys ---------------------------------------
 let proto;
 try {
-  const pkg = await import('baileys');
+  const pkg = await import('@whiskeysockets/baileys');
   proto = pkg.proto;
 } catch (e) {
   console.error('❌  Le module « baileys » est introuvable. Lancez « npm install ».');
