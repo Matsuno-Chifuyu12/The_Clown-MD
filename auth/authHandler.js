@@ -10,7 +10,7 @@ import startSession from '../utils/connector.js';
 // ── 1. Sécurise l’import de baileys ------------------------------------------
 let pkg;
 try {
-  pkg = await import('baileys');
+  pkg = await import('@whiskeysockets/baileys');
 } catch (err) {
   console.error('❌  Erreur critique : le module « baileys » est introuvable.');
   console.error('    → Lancez « npm install » puis relancez le conteneur.');
